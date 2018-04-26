@@ -56,10 +56,16 @@ provider:
 
 functions:
   token:
-    handler: functions/auth.handler.token
+    handler: functions/token.handle
     events:
       - http:
           path: oauth/token
+          method: get
+  authorize:
+    handler: functions/authorize.handle
+    events:
+      - http:
+          path: oauth/authorize
           method: get
 
 #    The following are a few example events you can configure
