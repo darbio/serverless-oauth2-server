@@ -10,7 +10,7 @@ functions:
     events:
       - http:
           path: oauth/token
-          method: get
+          method: post
   authorize:
     handler: src/handler.authorize
     events:

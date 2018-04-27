@@ -21,10 +21,10 @@ import { Session } from './infrastructure/models/Session';
 import { AuthorizationCode } from './infrastructure/models/AuthorizationCode';
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
-// password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
+// *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
 // *not implemented* client_credentials (client id and secret) - token?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
 // *not implemented* refresh - token?grant_type=refresh_token&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&refresh_token=REFRESH_TOKEN
-export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback) {
+export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
         // Validate client_id
         // TODO - move to a service
@@ -48,6 +48,30 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
         switch (grant_type) {
             case 'authorization_code':
                 
+                // Validate code    
+                const code = event.queryStringParameters.code
+                if (!validator.isUUID(code)) {
+                    throw new Error('Invalid authorization code')
+                }
+
+                // Validate redirect_uri
+                const redirect_uri = event.queryStringParameters.redirect_uri
+                if (!validator.isURL(redirect_uri)) {
+                    throw new Error('Invalid redirect url')
+                }
+
+                // Generate the access_token
+                let access_token = 'access_token'
+
+                callback(null, {
+                    statusCode: 302,
+                    headers: {
+                        'Location': redirect_uri,
+                    },
+                    body: null
+                })
+
+                
                 break
             case 'password':
                 throw new Error('Not implemented')
@@ -63,10 +87,6 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
             body: JSON.stringify(err)
         })
     }
-
-    
-
-    callback(null, "hello")
 };
 
 // code - authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
