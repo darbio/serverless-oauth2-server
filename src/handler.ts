@@ -19,6 +19,9 @@ import {
     AuthorizationService,
     IAuthorizationServiceParams
 } from './infrastructure/AuthorizationService';
+import {
+    AuthorizationSessionRepository
+} from './infrastructure/SessionRepository';
 
 let tokenService: ITokenService = new TokenService()
 let authorizationService: IAuthorizationService
@@ -34,7 +37,7 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 
 // code - authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
 // token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
-export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback<APIGatewayProxyResult>) {
+export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
         let params: IAuthorizationServiceParams = {
             responseType: event.queryStringParameters.response_type as 'code' | 'token',
@@ -44,7 +47,7 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             scopes: event.queryStringParameters.scope.split('+'),
             state: event.queryStringParameters.state
         }
-        authorizationService = new AuthorizationService(params)
+        authorizationService = new AuthorizationService(params, new AuthorizationSessionRepository())
 
         const loginUrl = authorizationService.initiate();
 
@@ -55,8 +58,7 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             },
             body: JSON.stringify(params)
         })
-    }
-    catch (err) {
+    } catch (err) {
         callback(err, {
             statusCode: 500,
             body: JSON.stringify(err)
