@@ -41,9 +41,20 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
         })
         console.log(`Created session with id: ${session.id}`)
 
-        // Validate client_id and client_secret (if required)
-        // TODO
-        console.log(JSON.stringify(session))
+        // Validate client_id
+        const client_id = event.queryStringParameters.client_id
+        if (client_id !== '167c05ab-4a58-47dc-b695-388f8bca6e43') {
+            throw new Error('Invalid client id')
+        }
+
+        // Validate client_secret
+        if (session.responseType == 'token') {
+            const client_secret = event.queryStringParameters.client_secret
+
+            if (client_secret !== 'SECRET') {
+                throw new Error('Invalid client secret')
+            }
+        }
 
         const sessionRepository = new SessionRepository();
         await sessionRepository.save(session);
