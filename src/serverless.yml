@@ -6,13 +6,13 @@ provider:
 
 functions:
   token:
-    handler: functions/token.handle
+    handler: handler.token
     events:
       - http:
           path: oauth/token
           method: get
   authorize:
-    handler: functions/authorize.handle
+    handler: handler.authorize
     events:
       - http:
           path: oauth/authorize
@@ -20,3 +20,4 @@ functions:
           
 plugins:
   - serverless-webpack
+  - serverless-offline
