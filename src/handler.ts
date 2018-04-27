@@ -27,6 +27,15 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
     // client_credentials (client id and secret) - token?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
     // refresh - token?grant_type=refresh_token&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&refresh_token=REFRESH_TOKEN
 
+    // Validate client_secret
+    if (event.queryStringParameters.client_secret) {
+        const client_secret = event.queryStringParameters.client_secret
+
+        if (client_secret !== 'SECRET') {
+            throw new Error('Invalid client secret')
+        }
+    }
+
     callback(null, "hello")
 };
 
@@ -39,7 +48,6 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             redirectUri: event.queryStringParameters.redirect_uri,
             state: event.queryStringParameters.state
         })
-        console.log(`Created session with id: ${session.id}`)
 
         // Validate client_id
         const client_id = event.queryStringParameters.client_id
@@ -47,20 +55,9 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             throw new Error('Invalid client id')
         }
 
-        // Validate client_secret
-        if (session.responseType == 'token') {
-            const client_secret = event.queryStringParameters.client_secret
+        const sessionRepository = new SessionRepository()
+        await sessionRepository.save(session)
 
-            if (client_secret !== 'SECRET') {
-                throw new Error('Invalid client secret')
-            }
-        }
-
-        const sessionRepository = new SessionRepository();
-        await sessionRepository.save(session);
-        console.log(`Saved session with id: ${session.id}`)
-
-        console.log(`Redirecting to: ${session.getLoginUrl()}`)
         callback(null, {
             statusCode: 302,
             headers: {

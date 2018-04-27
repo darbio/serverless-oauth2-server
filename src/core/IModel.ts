@@ -12,6 +12,7 @@ export interface IAuthorizationCode {
 
 export interface ISession {
     id: string,
+    clientId: string,
     responseType: 'code' | 'token'
     redirectUri: string
     state?: string

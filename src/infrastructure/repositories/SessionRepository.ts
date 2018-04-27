@@ -5,6 +5,7 @@ import { ISession } from "../../core/IModel";
 
 interface ISessionDataObject {
     id: string,
+    clientId: string
     responseType: 'code' | 'token'
     redirectUri: string
     state?: string
@@ -21,6 +22,7 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
         let session = new Session();
 
         session['_id'] = dataObject.id
+        session['_clientId'] = dataObject.clientId
         session['_responseType'] = dataObject.responseType
         session['_redirectUri'] = dataObject.redirectUri
         session['_state'] = dataObject.state
@@ -33,6 +35,7 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
     toDataObject(businessObject: ISession): ISessionDataObject {
         return <ISessionDataObject>{
             id: businessObject.id,
+            clientId: businessObject.clientId,
             responseType: businessObject.responseType,
             redirectUri: businessObject.redirectUri,
             state: businessObject.state,

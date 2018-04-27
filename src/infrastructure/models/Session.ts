@@ -10,6 +10,11 @@ export class Session implements ISession {
     }
     private _id: string
 
+    get clientId(): string {
+        return this._clientId
+    }
+    private _clientId: string
+
     get responseType(): 'code' | 'token' {
         return this._responseType;
     }
