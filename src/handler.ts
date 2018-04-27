@@ -106,6 +106,7 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                     statusCode: 401,
                     body: null
                 })
+                return;
             }
 
             const userLoginService: IUserLoginService = new UserLoginService()

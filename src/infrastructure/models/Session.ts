@@ -54,8 +54,11 @@ export class Session implements ISession {
         return session;
     }
 
+    /**
+     * Returns whether the session is still valid
+     */
     isValid(): boolean {
-        return new Date() > this._expires
+        return this._expires > new Date()
     }
 
     /**
