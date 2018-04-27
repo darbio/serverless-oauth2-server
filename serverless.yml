@@ -6,13 +6,13 @@ provider:
 
 functions:
   token:
-    handler: handler.token
+    handler: src/handler.token
     events:
       - http:
           path: oauth/token
           method: get
   authorize:
-    handler: handler.authorize
+    handler: src/handler.authorize
     events:
       - http:
           path: oauth/authorize
