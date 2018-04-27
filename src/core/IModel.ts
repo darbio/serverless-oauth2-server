@@ -19,4 +19,5 @@ export interface ISession {
     expires: Date
 
     getLoginUrl(): string
+    isValid(): boolean
 }

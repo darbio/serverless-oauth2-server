@@ -35,10 +35,6 @@ export class Session implements ISession {
     }
     private _expires: Date
 
-    constructor() {
-
-    }
-
     /**
      * Creates a new session
      * @param params 
@@ -56,6 +52,10 @@ export class Session implements ISession {
         session._created = new Date()
         session._expires = moment(session._created).add(1, 'h').toDate()
         return session;
+    }
+
+    isValid(): boolean {
+        return new Date() > this._expires
     }
 
     /**

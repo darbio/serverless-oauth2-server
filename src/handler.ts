@@ -101,6 +101,13 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
             const sessionRepository = new SessionRepository();
             const session = await sessionRepository.get(sessionId);
 
+            if (!session.isValid()) {
+                callback(new Error('Session has expired'), {
+                    statusCode: 401,
+                    body: null
+                })
+            }
+
             const userLoginService: IUserLoginService = new UserLoginService()
 
             if (await userLoginService.login(username, password)) {
