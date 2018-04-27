@@ -58,6 +58,9 @@ export class Session implements ISession {
         return session;
     }
 
+    /**
+     * Gets the login url for this session
+     */
     getLoginUrl(): string {
         return `/login?session=${this.id}`
     }
