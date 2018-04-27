@@ -22,6 +22,7 @@ export class AuthorizationCodeRepository extends DynamoDbRepository<Authorizatio
         domainObject['_id'] = dataObject.id
         domainObject['_subject'] = dataObject.subject
         domainObject['_created'] = new Date(dataObject.created)
+        domainObject['_expires'] = new Date(dataObject.expires)
 
         return domainObject;
     }
@@ -31,7 +32,7 @@ export class AuthorizationCodeRepository extends DynamoDbRepository<Authorizatio
             id: businessObject.id,
             subject: businessObject.subject,
             created: businessObject.created.getTime(),
-            expires: moment(businessObject.created).add(1, 'h').date()
+            expires: businessObject.expires.getTime()
         }
     }
 }
