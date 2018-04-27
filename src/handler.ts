@@ -15,7 +15,6 @@ import {
 import {
     DynamoDbRepository
 } from './infrastructure/repositories/DynamoDbRepository';
-import { SessionService } from './infrastructure/services/SessionService';
 import { SessionRepository } from './infrastructure/repositories/SessionRepository';
 import { AuthorizationCodeRepository } from './infrastructure/repositories/AuthorizationCodeRepository';
 import { Session } from './infrastructure/models/Session';
@@ -44,6 +43,7 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
         // Validate client_id
+        // TODO - move to a service
         const client_id = event.queryStringParameters.client_id
         if (client_id !== '167c05ab-4a58-47dc-b695-388f8bca6e43') {
             throw new Error('Invalid client id')
