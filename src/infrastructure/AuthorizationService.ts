@@ -49,8 +49,4 @@ export class AuthorizationService implements IAuthorizationService {
         this._scopes = params.scopes
         this._state = params.state
     }
-
-    GetLoginUrl(): string {
-        return `https://login.darb.io`;
-    }
 }
