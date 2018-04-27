@@ -19,12 +19,13 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
 
     toDomainObject(dataObject: ISessionDataObject): ISession {
         let session = new Session();
+
         session['_id'] = dataObject.id
         session['_responseType'] = dataObject.responseType
         session['_redirectUri'] = dataObject.redirectUri
         session['_state'] = dataObject.state
         session['_created'] = new Date(dataObject.created)
-        session['_expires'] = new Date(dataObject.created)
+        session['_expires'] = new Date(dataObject.expires)
 
         return session;
     }

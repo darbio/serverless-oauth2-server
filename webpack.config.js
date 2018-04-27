@@ -3,6 +3,7 @@ const slsw = require('serverless-webpack');
 
 module.exports = {
   entry: slsw.lib.entries,
+  mode: 'development',
   devtool: "source-map",
   resolve: {
     extensions: [
