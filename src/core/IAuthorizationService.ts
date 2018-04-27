@@ -1,3 +1,6 @@
 export interface IAuthorizationService {
-    loginUrl: string
+    /**
+     * Initiates the authorization flow
+     */
+    initiate(): string
 }

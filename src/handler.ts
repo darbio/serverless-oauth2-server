@@ -46,10 +46,12 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
         }
         authorizationService = new AuthorizationService(params)
 
+        const loginUrl = authorizationService.initiate();
+
         callback(null, {
             statusCode: 302,
             headers: {
-                'Location': authorizationService.loginUrl
+                'Location': loginUrl
             },
             body: JSON.stringify(params)
         })

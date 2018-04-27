@@ -1,4 +1,5 @@
 import * as validator from 'validator';
+import * as uuid from 'uuid/v4';
 
 import { IAuthorizationService } from "../core/IAuthorizationService";
 
@@ -21,9 +22,6 @@ export class AuthorizationService implements IAuthorizationService {
     private _scopes?: string[]
     private _state?: string;
 
-    get loginUrl(): string {
-        return this._loginUrl
-    }
     private _loginUrl: string = 'http://www.google.com.au'
 
     constructor(params: IAuthorizationServiceParams) {
@@ -48,5 +46,13 @@ export class AuthorizationService implements IAuthorizationService {
 
         this._scopes = params.scopes
         this._state = params.state
+    }
+
+    public initiate(): string {
+        // Create a unique identifier for this session
+        const sessionId = uuid();
+
+        // Set the url to our login server
+        return `${this._loginUrl}?session=${sessionId}`;
     }
 }
