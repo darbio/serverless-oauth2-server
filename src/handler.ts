@@ -7,30 +7,18 @@ import {
 import * as qs from 'querystring';
 
 import {
-    ITokenService
-} from './core/ITokenService';
-import {
-    TokenService
-} from './infrastructure/TokenService';
-
-import {
-    IAuthorizationService
-} from './core/IAuthorizationService';
-import {
-    AuthorizationService,
-    IAuthorizationServiceParams
-} from './infrastructure/AuthorizationService';
-import {
-    AuthorizationSessionRepository
-} from './infrastructure/SessionRepository';
-import {
     IUserLoginService
 } from './core/IUserLoginService';
-import { UserLoginService } from './infrastructure/UserLoginService';
-import { IAuthorizationSessionRepository } from './core/ISessionRepository';
-import { DynamoDyRepository } from './infrastructure/DynamoDbRepository';
-
-let tokenService: ITokenService = new TokenService()
+import {
+    UserLoginService
+} from './infrastructure/UserLoginService';
+import {
+    DynamoDyRepository
+} from './infrastructure/repositories/DynamoDbRepository';
+import { SessionService } from './infrastructure/services/SessionService';
+import { SessionRepository } from './infrastructure/repositories/SessionRepository';
+import { AuthorizationCodeRepository } from './infrastructure/repositories/AuthorizationCodeRepository';
+import { Session } from './infrastructure/models/Session';
 
 export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback) {
     // Response type
@@ -45,27 +33,24 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 // token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
 export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
-        let params: IAuthorizationServiceParams = {
+        const sessionService = new SessionService();
+
+        let session = await sessionService.createSession({
             responseType: event.queryStringParameters.response_type as 'code' | 'token',
-            clientId: event.queryStringParameters.client_id,
-            clientSecret: event.queryStringParameters.client_secret,
             redirectUri: event.queryStringParameters.redirect_uri,
-            scopes: event.queryStringParameters.scope.split('+'),
             state: event.queryStringParameters.state
-        }
+        });
 
-        
-
-        const authorizationService: IAuthorizationService = new AuthorizationService(new AuthorizationSessionRepository('sessions'))
-        await authorizationService.init(params)
+        const sessionRepository = new SessionRepository('authorization_sessions');
+        sessionRepository.save(session);
 
         callback(null, {
             statusCode: 302,
             headers: {
-                'Location': authorizationService.loginUrl
+                'Location': session.getLoginUrl()
             },
             body: null
-        })
+        });
     } catch (err) {
         callback(err, {
             statusCode: 500,
@@ -101,34 +86,42 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                     `
             })
         } else {
-            // Get the credentials from the body form
-            // e.g. username=username&password=password
             const formParts = qs.parse(event.body);
             const username = formParts.username
             const password = formParts.password
 
-            // Retrieve the login session
             const sessionId = event.queryStringParameters.session
-            const sessionRepository: IAuthorizationSessionRepository = new AuthorizationSessionRepository('sessions')
-            const session = await sessionRepository.get(sessionId);
 
-            const authorizationService = new AuthorizationService(new AuthorizationSessionRepository('sessions'))
-            authorizationService.loadFromSession(sessionId)
+            const sessionService = new SessionService();
+            const sessionRepository = new SessionRepository('authorization_sessions');
+
+            const session = new Session(await sessionRepository.get(sessionId));
 
             const userLoginService: IUserLoginService = new UserLoginService()
 
             if (await userLoginService.login(username, password)) {
                 // Login successful
-                // Send them back to the auth server with a authorization code which can be exchanged for a token
-                const code = await authorizationService.generateAuthorizationCode();
-                const url = `${session.redirectUri}?code=${code}&state=${session.state}`
-                callback(null, {
-                    statusCode: 302,
-                    headers: {
-                        'Location': url
-                    },
-                    body: null
-                })
+                if (session.responseType === 'token') {
+                    throw new Error('Not implemented')
+                }
+                if (session.responseType === 'code') {
+                    // Generate an authroization code
+                    const code = session.generateAuthCode(username);
+                    
+                    // Save the auth code
+                    const authorizationCodeRepository = new AuthorizationCodeRepository('authorization_codes');
+                    authorizationCodeRepository.save(code);
+
+                    // Send them back to the auth server with a authorization code
+                    const url = `${session.redirectUri}?code=${code.id}&state=${session.state}`
+                    callback(null, {
+                        statusCode: 302,
+                        headers: {
+                            'Location': url
+                        },
+                        body: null
+                    })
+                }
             } else {
                 // Login failed
                 callback(null, {

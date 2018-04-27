@@ -1,7 +1,7 @@
-export interface save<T> {
+export interface ISave<T> {
     save(entity: T): Promise<void>
 }
 
-export interface get<T, TId> {
+export interface IGet<T, TId> {
     get(id: TId): Promise<T>
 }

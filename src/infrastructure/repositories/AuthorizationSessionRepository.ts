@@ -1,5 +1,5 @@
-import { IAuthorizationSessionRepository } from "../core/ISessionRepository";
-import { IAuthorizationSession } from "../core/IModel";
+import { IAuthorizationSessionRepository } from "../../core/repositories/IAuthorizationSessionRepository";
+import { IAuthorizationSession } from "../../core/IModel";
 import { DynamoDyRepository } from "./DynamoDbRepository";
 
 export class AuthorizationSessionRepository extends DynamoDyRepository<IAuthorizationSession>
