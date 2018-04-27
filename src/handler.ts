@@ -20,20 +20,51 @@ import { AuthorizationCodeRepository } from './infrastructure/repositories/Autho
 import { Session } from './infrastructure/models/Session';
 import { AuthorizationCode } from './infrastructure/models/AuthorizationCode';
 
+// authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
+// password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
+// *not implemented* client_credentials (client id and secret) - token?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
+// *not implemented* refresh - token?grant_type=refresh_token&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&refresh_token=REFRESH_TOKEN
 export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback) {
-    // Response type
-    // password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
-    // client_credentials (client id and secret) - token?grant_type=client_credentials&client_id=CLIENT_ID&client_secret=CLIENT_SECRET
-    // refresh - token?grant_type=refresh_token&client_id=CLIENT_ID&client_secret=CLIENT_SECRET&refresh_token=REFRESH_TOKEN
-
-    // Validate client_secret
-    if (event.queryStringParameters.client_secret) {
-        const client_secret = event.queryStringParameters.client_secret
-
-        if (client_secret !== 'SECRET') {
-            throw new Error('Invalid client secret')
+    try {
+        // Validate client_id
+        // TODO - move to a service
+        const client_id = event.queryStringParameters.client_id
+        if (client_id !== '167c05ab-4a58-47dc-b695-388f8bca6e43') {
+            throw new Error('Invalid client id')
         }
+
+        // Validate client_secret
+        // TODO - move to a service
+        if (event.queryStringParameters.client_secret) {
+            const client_secret = event.queryStringParameters.client_secret
+
+            if (client_secret !== 'SECRET') {
+                throw new Error('Invalid client secret')
+            }
+        }
+
+        // Validate grant_type
+        const grant_type = event.queryStringParameters.grant_type
+        switch (grant_type) {
+            case 'authorization_code':
+                
+                break
+            case 'password':
+                throw new Error('Not implemented')
+                break
+            default:
+                throw new Error('Invalid grant type')    
+        }
+        
     }
+    catch (err) {
+        callback(err, {
+            statusCode: 500,
+            body: JSON.stringify(err)
+        })
+    }
+
+    
 
     callback(null, "hello")
 };
