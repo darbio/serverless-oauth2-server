@@ -13,12 +13,13 @@ import {
     UserLoginService
 } from './infrastructure/UserLoginService';
 import {
-    DynamoDyRepository
+    DynamoDbRepository
 } from './infrastructure/repositories/DynamoDbRepository';
 import { SessionService } from './infrastructure/services/SessionService';
 import { SessionRepository } from './infrastructure/repositories/SessionRepository';
 import { AuthorizationCodeRepository } from './infrastructure/repositories/AuthorizationCodeRepository';
 import { Session } from './infrastructure/models/Session';
+import { AuthorizationCode } from './infrastructure/models/AuthorizationCode';
 
 export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback) {
     // Response type
@@ -33,17 +34,22 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 // token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
 export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
-        const sessionService = new SessionService();
-
-        let session = await sessionService.createSession({
+        let session = Session.Create({
             responseType: event.queryStringParameters.response_type as 'code' | 'token',
             redirectUri: event.queryStringParameters.redirect_uri,
             state: event.queryStringParameters.state
-        });
+        })
+        console.log(`Created session with id: ${session.id}`)
 
-        const sessionRepository = new SessionRepository('authorization_sessions');
-        sessionRepository.save(session);
+        // Validate client_id and client_secret (if required)
+        // TODO
+        console.log(JSON.stringify(session))
 
+        const sessionRepository = new SessionRepository();
+        await sessionRepository.save(session);
+        console.log(`Saved session with id: ${session.id}`)
+
+        console.log(`Redirecting to: ${session.getLoginUrl()}`)
         callback(null, {
             statusCode: 302,
             headers: {
@@ -86,16 +92,14 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                     `
             })
         } else {
+            // Get the request variables
             const formParts = qs.parse(event.body);
             const username = formParts.username
             const password = formParts.password
-
             const sessionId = event.queryStringParameters.session
 
-            const sessionService = new SessionService();
-            const sessionRepository = new SessionRepository('authorization_sessions');
-
-            const session = new Session(await sessionRepository.get(sessionId));
+            const sessionRepository = new SessionRepository();
+            const session = await sessionRepository.get(sessionId);
 
             const userLoginService: IUserLoginService = new UserLoginService()
 
@@ -106,10 +110,10 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                 }
                 if (session.responseType === 'code') {
                     // Generate an authroization code
-                    const code = session.generateAuthCode(username);
+                    const code = AuthorizationCode.create({ subject: username });
                     
                     // Save the auth code
-                    const authorizationCodeRepository = new AuthorizationCodeRepository('authorization_codes');
+                    const authorizationCodeRepository = new AuthorizationCodeRepository();
                     authorizationCodeRepository.save(code);
 
                     // Send them back to the auth server with a authorization code

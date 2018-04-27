@@ -1,3 +1,5 @@
+import { DateTime } from "aws-sdk/clients/glacier";
+
 export interface IAuthorizationSession {
     id: string,
     responseType: 'code' | 'token'
@@ -16,6 +18,7 @@ export interface IUser {
 export interface IAuthorizationCode {
     id: string
     subject: string
+    created: Date
 }
 
 export interface ISession {
@@ -23,7 +26,7 @@ export interface ISession {
     responseType: 'code' | 'token'
     redirectUri: string
     state?: string
+    created: Date
 
     getLoginUrl(): string
-    generateAuthCode(subject: string): IAuthorizationCode
 }

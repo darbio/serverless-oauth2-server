@@ -15,8 +15,7 @@ export class SessionService implements ISessionService {
         redirectUri: string,
         state?: string
     }): Promise<ISession> {
-        return new Session(<ISession>{
-            id: uuid(),
+        return Session.Create({
             responseType: params.responseType,
             redirectUri: params.redirectUri,
             state: params.state

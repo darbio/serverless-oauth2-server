@@ -3,6 +3,7 @@ const slsw = require('serverless-webpack');
 
 module.exports = {
   entry: slsw.lib.entries,
+  devtool: "inline-source-map",
   resolve: {
     extensions: [
       '.js',

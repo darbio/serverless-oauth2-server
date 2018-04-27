@@ -1,6 +1,6 @@
 import * as aws from 'aws-sdk';
 
-export class DynamoDyRepository<T> {
+export abstract class DynamoDbRepository<T> {
     private client: aws.DynamoDB.DocumentClient
 
     constructor(private tableName: string) {
@@ -10,11 +10,14 @@ export class DynamoDyRepository<T> {
         })
     }
 
+    abstract toDomainObject(dataObject: any): T;
+    abstract toDataObject(domainObject: T): any;
+
     save(model: T): Promise<void> {
         return new Promise((resolve, reject) => {
             const params: aws.DynamoDB.DocumentClient.PutItemInput = {
                 TableName: this.tableName,
-                Item: model
+                Item: this.toDataObject(model)
             }
             this.client.put(params, () => {
                 resolve()
@@ -36,7 +39,8 @@ export class DynamoDyRepository<T> {
                     reject(error)
                 }
                 else {
-                    resolve(result.Item as T)
+                    let item = this.toDomainObject(result.Item);
+                    resolve(item)
                 }
             })
         })
