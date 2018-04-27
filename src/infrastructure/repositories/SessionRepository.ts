@@ -9,6 +9,7 @@ interface ISessionDataObject {
     redirectUri: string
     state?: string
     created: number
+    expires: number
 }
 
 export class SessionRepository extends DynamoDbRepository<ISession> implements ISessionRepository {
@@ -23,6 +24,7 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
         session['_redirectUri'] = dataObject.redirectUri
         session['_state'] = dataObject.state
         session['_created'] = new Date(dataObject.created)
+        session['_expires'] = new Date(dataObject.created)
 
         return session;
     }
@@ -33,7 +35,8 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
             responseType: businessObject.responseType,
             redirectUri: businessObject.redirectUri,
             state: businessObject.state,
-            created: businessObject.created.getTime()
+            created: businessObject.created.getTime(),
+            expires: businessObject.expires.getTime()
         }
     }
 }

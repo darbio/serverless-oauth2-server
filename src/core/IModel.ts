@@ -19,6 +19,7 @@ export interface IAuthorizationCode {
     id: string
     subject: string
     created: Date
+    expires: Date
 }
 
 export interface ISession {
@@ -27,6 +28,7 @@ export interface ISession {
     redirectUri: string
     state?: string
     created: Date
+    expires: Date
 
     getLoginUrl(): string
 }

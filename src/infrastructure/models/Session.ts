@@ -1,6 +1,7 @@
 import { ISession, IAuthorizationCode } from "../../core/IModel";
 import * as uuid from 'uuid/v4';
 import * as bcrypt from 'bcrypt';
+import * as moment from 'moment';
 import { AuthorizationCode } from "./AuthorizationCode";
 
 export class Session implements ISession {
@@ -29,6 +30,11 @@ export class Session implements ISession {
     }
     private _created: Date
 
+    get expires(): Date {
+        return this._expires
+    }
+    private _expires: Date
+
     constructor() {
 
     }
@@ -48,6 +54,7 @@ export class Session implements ISession {
         session._redirectUri = params.redirectUri
         session._state = params.state
         session._created = new Date()
+        session._expires = moment(session._created).add(1, 'h').toDate()
         return session;
     }
 
