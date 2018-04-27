@@ -1,4 +1,4 @@
-export interface IAuthorizeSession {
+export interface IAuthorizationSession {
     id: string,
     responseType: 'code' | 'token'
     clientId: string

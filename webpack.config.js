@@ -11,6 +11,9 @@ module.exports = {
       '.tsx'
     ]
   },
+  externals: [
+    'bcrypt'
+  ],
   output: {
     libraryTarget: 'commonjs',
     path: path.join(__dirname, '.webpack'),

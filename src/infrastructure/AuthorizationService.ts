@@ -1,9 +1,10 @@
-import * as validator from 'validator';
-import * as uuid from 'uuid/v4';
+import * as validator from 'validator'
+import * as uuid from 'uuid/v4'
+import * as bcrypt from 'bcrypt'
 
-import { IAuthorizationService } from "../core/IAuthorizationService";
-import { IAuthorizationSessionRepository } from '../core/ISessionRepository';
-import { IAuthorizeSession } from '../core/IModel';
+import { IAuthorizationService } from "../core/IAuthorizationService"
+import { IAuthorizationSessionRepository } from '../core/ISessionRepository'
+import { IAuthorizationSession } from '../core/IModel'
 
 export interface IAuthorizationServiceParams {
     responseType: 'code' | 'token'
@@ -24,11 +25,20 @@ export class AuthorizationService implements IAuthorizationService {
     private _scopes?: string[]
     private _state?: string;
 
-    private _loginUrl: string = 'http://localhost:3000/login'
+    get loginUrl(): string {
+        return this._loginUrl
+    }
+    private _loginUrl: string;
+
+    private _sessionId: string = uuid();
 
     _sessionRepository: IAuthorizationSessionRepository;
 
-    constructor(params: IAuthorizationServiceParams, sessionRepository: IAuthorizationSessionRepository) {
+    constructor(sessionRepository: IAuthorizationSessionRepository) {
+        this._sessionRepository = sessionRepository
+    }
+
+    public async init(params: IAuthorizationServiceParams): Promise<void> {
         // Params
         // Validate the repsonse type
         switch (params.responseType) {
@@ -52,15 +62,10 @@ export class AuthorizationService implements IAuthorizationService {
         this._scopes = params.scopes
         this._state = params.state
 
-        // Dependency injection
-        this._sessionRepository = sessionRepository
-    }
-
-    public initiate(): string {
         // Create a session
         // This is used to co-ordinate between calls to the stateless provider
-        const session: IAuthorizeSession = {
-            id: uuid(),
+        const session: IAuthorizationSession = {
+            id: this._sessionId,
             responseType: this._responseType,
             clientId: this._clientId,
             clientSecret: this._clientSecret,
@@ -70,9 +75,26 @@ export class AuthorizationService implements IAuthorizationService {
         }
 
         // Persist the session
-        this._sessionRepository.save(session);
+        await this._sessionRepository.save(session);
 
         // Set the url to our login server
-        return `${this._loginUrl}?session=${session.id}`;
+        this._loginUrl = `/login?session=${session.id}`;
     }
+
+    async loadFromSession(sessionId: string) {
+        const session = await this._sessionRepository.get(sessionId);
+
+        this._sessionId = session.id
+        this._clientId = session.clientId
+        this._clientSecret = session.clientSecret
+        this._redirectUri = session.redirectUri
+        this._responseType = session.responseType
+        this._scopes = session.scopes
+        this._state = session.state
+    }
+
+    public async generateAuthorizationCode(): Promise<string> {
+        return await bcrypt.hash(uuid(), 6);
+    }
+
 }

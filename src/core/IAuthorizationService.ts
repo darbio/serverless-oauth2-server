@@ -1,6 +1,7 @@
+import { IAuthorizationServiceParams } from "../infrastructure/AuthorizationService";
+
 export interface IAuthorizationService {
-    /**
-     * Initiates the authorization flow
-     */
-    initiate(): string
+    init(params: IAuthorizationServiceParams): Promise<void>
+    
+    loginUrl: string
 }

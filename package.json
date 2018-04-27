@@ -15,6 +15,8 @@
   "homepage": "https://bitbucket.org/darbio/idp#readme",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.3",
+    "@types/bcrypt": "^1.0.0",
+    "@types/validator": "^9.4.1",
     "serverless-offline": "^3.20.3",
     "serverless-webpack": "^5.1.1",
     "ts-loader": "^4.2.0",
@@ -22,6 +24,8 @@
     "webpack": "^4.6.0"
   },
   "dependencies": {
+    "aws-sdk": "^2.229.1",
+    "bcrypt": "^2.0.1",
     "uuid": "^3.2.1",
     "validator": "^9.4.1"
   }

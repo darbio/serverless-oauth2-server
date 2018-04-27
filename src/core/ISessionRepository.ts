@@ -1,12 +1,5 @@
-import { IAuthorizeSession } from "./IModel";
+import { IAuthorizationSession } from './IModel';
+import { save, get } from './IRepository';
 
-interface save<T> {
-    save(entity: T): Promise<void>
-}
-
-interface get<T, TId> {
-    get(id: TId): Promise<T>
-}
-
-export interface IAuthorizationSessionRepository extends save<IAuthorizeSession>, get<IAuthorizeSession, string> {
+export interface IAuthorizationSessionRepository extends save<IAuthorizationSession>, get<IAuthorizationSession, string> {
 }

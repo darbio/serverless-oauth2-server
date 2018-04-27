@@ -27,6 +27,8 @@ import {
     IUserLoginService
 } from './core/IUserLoginService';
 import { UserLoginService } from './infrastructure/UserLoginService';
+import { IAuthorizationSessionRepository } from './core/ISessionRepository';
+import { DynamoDyRepository } from './infrastructure/DynamoDbRepository';
 
 let tokenService: ITokenService = new TokenService()
 
@@ -52,13 +54,15 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             state: event.queryStringParameters.state
         }
 
-        const authorizationService: IAuthorizationService = new AuthorizationService(params, new AuthorizationSessionRepository())
-        const loginUrl = authorizationService.initiate()
+        
+
+        const authorizationService: IAuthorizationService = new AuthorizationService(new AuthorizationSessionRepository('sessions'))
+        await authorizationService.init(params)
 
         callback(null, {
             statusCode: 302,
             headers: {
-                'Location': loginUrl
+                'Location': authorizationService.loginUrl
             },
             body: null
         })
@@ -73,7 +77,7 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
 // login?session=1234
 export async function login(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
-        if (event.httpMethod.toLowerCase() === "get") {
+        if (event.httpMethod.toLowerCase() === 'get') {
             const sessionId = event.queryStringParameters.session
             callback(null, {
                 statusCode: 200,
@@ -84,10 +88,10 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                         <html>
                             <form action="/login?session=${sessionId}" method="post">
                                 <div class="container">
-                                    <label for="uname"><b>Username</b></label>
+                                    <label for="username"><b>Username</b></label>
                                     <input type="text" placeholder="Enter Username" name="username" required>
 
-                                    <label for="psw"><b>Password</b></label>
+                                    <label for="password"><b>Password</b></label>
                                     <input type="password" placeholder="Enter Password" name="password" required>
 
                                     <button type="submit">Login</button>
@@ -103,15 +107,21 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
             const username = formParts.username
             const password = formParts.password
 
-            // Get the session id from the url
+            // Retrieve the login session
             const sessionId = event.queryStringParameters.session
+            const sessionRepository: IAuthorizationSessionRepository = new AuthorizationSessionRepository('sessions')
+            const session = await sessionRepository.get(sessionId);
+
+            const authorizationService = new AuthorizationService(new AuthorizationSessionRepository('sessions'))
+            authorizationService.loadFromSession(sessionId)
 
             const userLoginService: IUserLoginService = new UserLoginService()
 
             if (await userLoginService.login(username, password)) {
                 // Login successful
-                // Send them back to the auth server with a confirmation code
-                const url = `http://endpoint/?session=${sessionId}`
+                // Send them back to the auth server with a authorization code which can be exchanged for a token
+                const code = await authorizationService.generateAuthorizationCode();
+                const url = `${session.redirectUri}?code=${code}&state=${session.state}`
                 callback(null, {
                     statusCode: 302,
                     headers: {

@@ -1,15 +1,7 @@
 import { IAuthorizationSessionRepository } from "../core/ISessionRepository";
-import { IAuthorizeSession } from "../core/IModel";
+import { IAuthorizationSession } from "../core/IModel";
+import { DynamoDyRepository } from "./DynamoDbRepository";
 
-export class AuthorizationSessionRepository implements IAuthorizationSessionRepository {
-    sessions: IAuthorizeSession[] = [];
-
-    async get(id: string): Promise<IAuthorizeSession> {
-        const index = this.sessions.findIndex((session) => { return session.id === id})
-        return Promise.resolve(this.sessions[index]);
-    }
-
-    async save(session: IAuthorizeSession): Promise<void>{
-        this.sessions.push(session);
-    }
+export class AuthorizationSessionRepository extends DynamoDyRepository<IAuthorizationSession>
+    implements IAuthorizationSessionRepository {
 }
