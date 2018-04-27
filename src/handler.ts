@@ -43,17 +43,18 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 // token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
 export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
-        let session = Session.Create({
-            responseType: event.queryStringParameters.response_type as 'code' | 'token',
-            redirectUri: event.queryStringParameters.redirect_uri,
-            state: event.queryStringParameters.state
-        })
-
         // Validate client_id
         const client_id = event.queryStringParameters.client_id
         if (client_id !== '167c05ab-4a58-47dc-b695-388f8bca6e43') {
             throw new Error('Invalid client id')
         }
+
+        let session = Session.Create({
+            clientId: client_id,
+            responseType: event.queryStringParameters.response_type as 'code' | 'token',
+            redirectUri: event.queryStringParameters.redirect_uri,
+            state: event.queryStringParameters.state
+        })
 
         const sessionRepository = new SessionRepository()
         await sessionRepository.save(session)

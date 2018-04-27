@@ -45,12 +45,14 @@ export class Session implements ISession {
      * @param params 
      */
     static Create(params: {
+        clientId: string,
         responseType: 'code' | 'token',
         redirectUri: string,
         state: string
     }): Session {
         let session = new Session();
         session._id = uuid();
+        session._clientId = params.clientId
         session._responseType = params.responseType
         session._redirectUri = params.redirectUri
         session._state = params.state
