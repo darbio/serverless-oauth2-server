@@ -4,6 +4,7 @@ import {
     Callback,
     APIGatewayProxyResult
 } from 'aws-lambda';
+import * as qs from 'querystring';
 
 import {
     ITokenService
@@ -22,9 +23,12 @@ import {
 import {
     AuthorizationSessionRepository
 } from './infrastructure/SessionRepository';
+import {
+    IUserLoginService
+} from './core/IUserLoginService';
+import { UserLoginService } from './infrastructure/UserLoginService';
 
 let tokenService: ITokenService = new TokenService()
-let authorizationService: IAuthorizationService
 
 export async function token(event: APIGatewayProxyEvent, context: Context, callback: Callback) {
     // Response type
@@ -47,16 +51,16 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
             scopes: event.queryStringParameters.scope.split('+'),
             state: event.queryStringParameters.state
         }
-        authorizationService = new AuthorizationService(params, new AuthorizationSessionRepository())
 
-        const loginUrl = authorizationService.initiate();
+        const authorizationService: IAuthorizationService = new AuthorizationService(params, new AuthorizationSessionRepository())
+        const loginUrl = authorizationService.initiate()
 
         callback(null, {
             statusCode: 302,
             headers: {
                 'Location': loginUrl
             },
-            body: JSON.stringify(params)
+            body: null
         })
     } catch (err) {
         callback(err, {
@@ -65,3 +69,70 @@ export async function authorize(event: APIGatewayProxyEvent, context: Context, c
         })
     }
 };
+
+// login?session=1234
+export async function login(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
+    try {
+        if (event.httpMethod.toLowerCase() === "get") {
+            const sessionId = event.queryStringParameters.session
+            callback(null, {
+                statusCode: 200,
+                headers: {
+                    'Content-Type': 'text/html'
+                },
+                body: `
+                        <html>
+                            <form action="/login?session=${sessionId}" method="post">
+                                <div class="container">
+                                    <label for="uname"><b>Username</b></label>
+                                    <input type="text" placeholder="Enter Username" name="username" required>
+
+                                    <label for="psw"><b>Password</b></label>
+                                    <input type="password" placeholder="Enter Password" name="password" required>
+
+                                    <button type="submit">Login</button>
+                                </div>
+                            </form>
+                        </html>
+                    `
+            })
+        } else {
+            // Get the credentials from the body form
+            // e.g. username=username&password=password
+            const formParts = qs.parse(event.body);
+            const username = formParts.username
+            const password = formParts.password
+
+            // Get the session id from the url
+            const sessionId = event.queryStringParameters.session
+
+            const userLoginService: IUserLoginService = new UserLoginService()
+
+            if (await userLoginService.login(username, password)) {
+                // Login successful
+                // Send them back to the auth server with a confirmation code
+                const url = `http://endpoint/?session=${sessionId}`
+                callback(null, {
+                    statusCode: 302,
+                    headers: {
+                        'Location': url
+                    },
+                    body: null
+                })
+            } else {
+                // Login failed
+                callback(null, {
+                    statusCode: 401,
+                    body: JSON.stringify({
+                        message: 'Invalid credentials'
+                    })
+                })
+            }
+        }
+    } catch (err) {
+        callback(err, {
+            statusCode: 500,
+            body: JSON.stringify(err)
+        })
+    }
+}

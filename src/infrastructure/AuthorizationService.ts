@@ -24,7 +24,7 @@ export class AuthorizationService implements IAuthorizationService {
     private _scopes?: string[]
     private _state?: string;
 
-    private _loginUrl: string = 'http://www.google.com.au'
+    private _loginUrl: string = 'http://localhost:3000/login'
 
     _sessionRepository: IAuthorizationSessionRepository;
 

@@ -17,6 +17,15 @@ functions:
       - http:
           path: oauth/authorize
           method: get
+  login:
+    handler: src/handler.login
+    events:
+      - http:
+          path: login
+          method: post
+      - http:
+          path: login
+          method: get
           
 plugins:
   - serverless-webpack
