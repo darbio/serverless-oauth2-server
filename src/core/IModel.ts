@@ -6,6 +6,8 @@ export interface IUser {
 export interface IAuthorizationCode {
     id: string
     subject: string
+    clientId: string
+    redirectUri: string
     created: Date
     expires: Date
 }

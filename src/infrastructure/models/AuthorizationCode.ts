@@ -8,6 +8,16 @@ export class AuthorizationCode implements IAuthorizationCode {
     }
     private _id: string
 
+    get clientId(): string {
+        return this._clientId
+    }
+    private _clientId: string
+
+    get redirectUri(): string {
+        return this._redirectUri
+    }
+    private _redirectUri: string
+
     get subject(): string {
         return this._subject
     }
@@ -23,12 +33,16 @@ export class AuthorizationCode implements IAuthorizationCode {
     }
     private _expires: Date
 
-    static create(params: { subject: string }): AuthorizationCode {
+    static create(params: { subject: string, clientId: string, redirectUrl: string }): AuthorizationCode {
         let code = new AuthorizationCode()
+
         code._id = uuid()
+        code._clientId = params.clientId
+        code._redirectUri = params.redirectUrl
         code._subject = params.subject
         code._created = new Date()
         code._expires = moment(code._created).add(1, 'h').toDate()
+
         return code;
     }
 

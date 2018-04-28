@@ -5,6 +5,9 @@ import {
     APIGatewayProxyResult
 } from 'aws-lambda';
 import * as qs from 'querystring';
+import * as jsonwebtoken from 'jsonwebtoken';
+import * as validator from 'validator';
+import * as moment from 'moment';
 
 import {
     IUserLoginService
@@ -19,6 +22,8 @@ import { SessionRepository } from './infrastructure/repositories/SessionReposito
 import { AuthorizationCodeRepository } from './infrastructure/repositories/AuthorizationCodeRepository';
 import { Session } from './infrastructure/models/Session';
 import { AuthorizationCode } from './infrastructure/models/AuthorizationCode';
+import { IAuthorizationCodeRepository } from './core/repositories/IAuthorizationCodeRepository';
+import { NumberOfLaunchConfigurations } from 'aws-sdk/clients/autoscaling';
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -60,22 +65,57 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
                     throw new Error('Invalid redirect url')
                 }
 
+                // Get the auth_code
+                const authorizationCodeRepository: IAuthorizationCodeRepository = new AuthorizationCodeRepository()
+                const authorizationCode = await authorizationCodeRepository.get(code)
+
+                // Validate
+                if (redirect_uri !== authorizationCode.redirectUri) {
+                    throw new Error('Invalid redirect url')
+                }
+                if (client_id !== authorizationCode.clientId) {
+                    throw new Error(`Invalid client id`)
+                }
+
                 // Generate the access_token
-                let access_token = 'access_token'
+                const secret = 'SECRET'
+                let access_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret);
+                let id_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret)
+
+                // Revoke the authorization code
+                // await authorizationCodeRepository.de
+
+                // Response
+                let response: {
+                    access_token: string
+                    id_token?: string
+                    refresh_token?: string
+                    token_type: 'bearer' | ''
+                    expires_in?: number
+                    scopes?: string
+                    state?: string
+
+                } = {
+                    access_token: access_token,
+                    id_token: id_token,
+                    token_type: 'bearer',
+                    expires_in: Math.round(moment.duration(moment(moment().add(1, 'h')).diff(moment(new Date()))).asSeconds()),
+                };
 
                 callback(null, {
-                    statusCode: 302,
+                    statusCode: 200,
                     headers: {
-                        'Location': redirect_uri,
+                        'Cache-Control': 'no-store',
+                        'Pragma': 'no-cache'
                     },
-                    body: null
+                    body: JSON.stringify(response)
                 })
 
                 
                 break
             case 'password':
                 throw new Error('Not implemented')
-                break
+                //break
             default:
                 throw new Error('Invalid grant type')    
         }
@@ -154,8 +194,8 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
         } else {
             // Get the request variables
             const formParts = qs.parse(event.body);
-            const username = formParts.username
-            const password = formParts.password
+            const username = `${formParts.username}`
+            const password = `${formParts.password}`
             const sessionId = event.queryStringParameters.session
 
             const sessionRepository = new SessionRepository();
@@ -178,7 +218,11 @@ export async function login(event: APIGatewayProxyEvent, context: Context, callb
                 }
                 if (session.responseType === 'code') {
                     // Generate an authroization code
-                    const code = AuthorizationCode.create({ subject: username });
+                    const code = AuthorizationCode.create({
+                        subject: username,
+                        clientId: session.clientId,
+                        redirectUrl: session.redirectUri
+                    });
                     
                     // Save the auth code
                     const authorizationCodeRepository = new AuthorizationCodeRepository();
