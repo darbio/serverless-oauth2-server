@@ -39,8 +39,31 @@ export abstract class DynamoDbRepository<T> {
                     reject(error)
                 }
                 else {
-                    let item = this.toDomainObject(result.Item);
-                    resolve(item)
+                    if (result.Item) {
+                        let item = this.toDomainObject(result.Item);
+                        resolve(item)
+                    } else {
+                        resolve(null)
+                    }    
+                }
+            })
+        })
+    }
+
+    delete(id): Promise<void> {
+        return new Promise((resolve, reject) => {
+            const params: aws.DynamoDB.DocumentClient.DeleteItemInput = {
+                TableName: this.tableName,
+                Key: {
+                    id: id
+                }
+            }
+            this.client.delete(params, (error, result) => {
+                if (error) {
+                    reject(error)
+                }
+                else {
+                    resolve()
                 }
             })
         })

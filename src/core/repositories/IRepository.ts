@@ -5,3 +5,7 @@ export interface ISave<T> {
 export interface IGet<T, TId> {
     get(id: TId): Promise<T>
 }
+
+export interface IDelete<TId> {
+    delete(id: TId): Promise<void>
+}
