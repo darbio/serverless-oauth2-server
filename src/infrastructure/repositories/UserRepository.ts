@@ -6,6 +6,7 @@ import * as aws from "aws-sdk";
 interface IUserDataObject {
     id: string;
     passwordHash: string;
+    claims: { [key: string]: string };
 }
 
 export class UserRepository extends DynamoDbRepository<User>
@@ -19,6 +20,7 @@ export class UserRepository extends DynamoDbRepository<User>
 
         user["_id"] = dataObject.id;
         user["_passwordHash"] = dataObject.passwordHash;
+        user["_claims"] = dataObject.claims;
 
         return user;
     }
@@ -26,7 +28,8 @@ export class UserRepository extends DynamoDbRepository<User>
     toDataObject(businessObject: User): IUserDataObject {
         return <IUserDataObject>{
             id: businessObject.id,
-            passwordHash: businessObject["_passwordHash"]
+            passwordHash: businessObject["_passwordHash"],
+            claims: businessObject.claims
         };
     }
 }

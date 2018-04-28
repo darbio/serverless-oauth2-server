@@ -8,6 +8,11 @@ export class User implements IUser {
     }
     private _id: string;
 
+    get claims(): { [key: string]: string } {
+        return this._claims;
+    }
+    private _claims: { [key: string]: string };
+
     private _passwordHash: string;
 
     /**
@@ -22,9 +27,13 @@ export class User implements IUser {
      * Creates a new user with the specified username and password
      * @param params
      */
-    static create(params: { username: string; password: string }): User {
+    static create(params: {
+        username: string;
+        password: string;
+        claims: { [key: string]: string };
+    }): User {
         let user = new User();
-        user._id = params.username;
+        user._id = params.username; // TODO MD5 hash the username
         user._passwordHash = bcrypt.hashSync(params.password, 10);
         return user;
     }
