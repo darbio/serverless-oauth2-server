@@ -1,6 +1,6 @@
-import { ISession } from "../IModel";
 import { IGet, ISave } from "./IRepository";
+import { ISession } from "../models/ISession";
 
-export interface ISessionRepository extends ISave<ISession>, IGet<ISession, string> {
-
-}
+export interface ISessionRepository
+    extends ISave<ISession>,
+        IGet<ISession, string> {}

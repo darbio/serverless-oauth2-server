@@ -1,63 +1,65 @@
-import { ISession, IAuthorizationCode } from "../../core/IModel";
-import * as uuid from 'uuid/v4';
-import * as bcrypt from 'bcrypt';
-import * as moment from 'moment';
+import * as uuid from "uuid/v4";
+import * as bcrypt from "bcrypt";
+import * as moment from "moment";
 import { AuthorizationCode } from "./AuthorizationCode";
+import { ISession } from "../../core/models/ISession";
 
 export class Session implements ISession {
     get id(): string {
         return this._id;
     }
-    private _id: string
+    private _id: string;
 
     get clientId(): string {
-        return this._clientId
+        return this._clientId;
     }
-    private _clientId: string
+    private _clientId: string;
 
-    get responseType(): 'code' | 'token' {
+    get responseType(): "code" | "token" {
         return this._responseType;
     }
-    private _responseType: 'code' | 'token'
+    private _responseType: "code" | "token";
 
     get redirectUri(): string {
         return this._redirectUri;
     }
-    private _redirectUri: string
+    private _redirectUri: string;
 
     get state(): string {
-        return this._state
+        return this._state;
     }
-    private _state?: string
+    private _state?: string;
 
     get created(): Date {
         return this._created;
     }
-    private _created: Date
+    private _created: Date;
 
     get expires(): Date {
-        return this._expires
+        return this._expires;
     }
-    private _expires: Date
+    private _expires: Date;
 
     /**
      * Creates a new session
-     * @param params 
+     * @param params
      */
     static Create(params: {
-        clientId: string,
-        responseType: 'code' | 'token',
-        redirectUri: string,
-        state: string
+        clientId: string;
+        responseType: "code" | "token";
+        redirectUri: string;
+        state: string;
     }): Session {
         let session = new Session();
         session._id = uuid();
-        session._clientId = params.clientId
-        session._responseType = params.responseType
-        session._redirectUri = params.redirectUri
-        session._state = params.state
-        session._created = new Date()
-        session._expires = moment(session._created).add(1, 'h').toDate()
+        session._clientId = params.clientId;
+        session._responseType = params.responseType;
+        session._redirectUri = params.redirectUri;
+        session._state = params.state;
+        session._created = new Date();
+        session._expires = moment(session._created)
+            .add(1, "h")
+            .toDate();
         return session;
     }
 
@@ -65,13 +67,13 @@ export class Session implements ISession {
      * Returns whether the session is still valid
      */
     isValid(): boolean {
-        return this._expires > new Date()
+        return this._expires > new Date();
     }
 
     /**
      * Gets the login url for this session
      */
     getLoginUrl(): string {
-        return `/login?session=${this.id}`
+        return `/login?session=${this.id}`;
     }
 }

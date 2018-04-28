@@ -1,13 +1,13 @@
-import * as aws from 'aws-sdk';
+import * as aws from "aws-sdk";
 
 export abstract class DynamoDbRepository<T> {
-    private client: aws.DynamoDB.DocumentClient
+    private client: aws.DynamoDB.DocumentClient;
 
     constructor(private tableName: string) {
         this.client = new aws.DynamoDB.DocumentClient({
-            endpoint: 'http://localhost:4569',
-            region: 'ap-southeast-2'
-        })
+            endpoint: "http://localhost:4569",
+            region: "ap-southeast-2"
+        });
     }
 
     abstract toDomainObject(dataObject: any): T;
@@ -18,12 +18,11 @@ export abstract class DynamoDbRepository<T> {
             const params: aws.DynamoDB.DocumentClient.PutItemInput = {
                 TableName: this.tableName,
                 Item: this.toDataObject(model)
-            }
+            };
             this.client.put(params, () => {
-                resolve()
-            })
-        })
-        
+                resolve();
+            });
+        });
     }
 
     get(id): Promise<T> {
@@ -33,21 +32,20 @@ export abstract class DynamoDbRepository<T> {
                 Key: {
                     id: id
                 }
-            }
+            };
             this.client.get(params, (error, result) => {
                 if (error) {
-                    reject(error)
-                }
-                else {
+                    reject(error);
+                } else {
                     if (result.Item) {
                         let item = this.toDomainObject(result.Item);
-                        resolve(item)
+                        resolve(item);
                     } else {
-                        resolve(null)
-                    }    
+                        resolve(null);
+                    }
                 }
-            })
-        })
+            });
+        });
     }
 
     delete(id): Promise<void> {
@@ -57,15 +55,14 @@ export abstract class DynamoDbRepository<T> {
                 Key: {
                     id: id
                 }
-            }
+            };
             this.client.delete(params, (error, result) => {
                 if (error) {
-                    reject(error)
+                    reject(error);
+                } else {
+                    resolve();
                 }
-                else {
-                    resolve()
-                }
-            })
-        })
+            });
+        });
     }
 }

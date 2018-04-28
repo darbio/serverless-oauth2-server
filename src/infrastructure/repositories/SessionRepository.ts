@@ -1,38 +1,38 @@
 import { ISessionRepository } from "../../core/repositories/ISessionRepository";
 import { DynamoDbRepository } from "./DynamoDbRepository";
 import { Session } from "../models/Session";
-import { ISession } from "../../core/IModel";
 
 interface ISessionDataObject {
-    id: string,
-    clientId: string
-    responseType: 'code' | 'token'
-    redirectUri: string
-    state?: string
-    created: number
-    expires: number
+    id: string;
+    clientId: string;
+    responseType: "code" | "token";
+    redirectUri: string;
+    state?: string;
+    created: number;
+    expires: number;
 }
 
-export class SessionRepository extends DynamoDbRepository<ISession> implements ISessionRepository {
+export class SessionRepository extends DynamoDbRepository<Session>
+    implements ISessionRepository {
     constructor() {
-        super('authorization_sessions')
+        super("authorization_sessions");
     }
 
-    toDomainObject(dataObject: ISessionDataObject): ISession {
+    toDomainObject(dataObject: ISessionDataObject): Session {
         let session = new Session();
 
-        session['_id'] = dataObject.id
-        session['_clientId'] = dataObject.clientId
-        session['_responseType'] = dataObject.responseType
-        session['_redirectUri'] = dataObject.redirectUri
-        session['_state'] = dataObject.state
-        session['_created'] = new Date(dataObject.created)
-        session['_expires'] = new Date(dataObject.expires)
+        session["_id"] = dataObject.id;
+        session["_clientId"] = dataObject.clientId;
+        session["_responseType"] = dataObject.responseType;
+        session["_redirectUri"] = dataObject.redirectUri;
+        session["_state"] = dataObject.state;
+        session["_created"] = new Date(dataObject.created);
+        session["_expires"] = new Date(dataObject.expires);
 
         return session;
     }
 
-    toDataObject(businessObject: ISession): ISessionDataObject {
+    toDataObject(businessObject: Session): ISessionDataObject {
         return <ISessionDataObject>{
             id: businessObject.id,
             clientId: businessObject.clientId,
@@ -41,6 +41,6 @@ export class SessionRepository extends DynamoDbRepository<ISession> implements I
             state: businessObject.state,
             created: businessObject.created.getTime(),
             expires: businessObject.expires.getTime()
-        }
+        };
     }
 }

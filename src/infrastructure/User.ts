@@ -1,16 +1,9 @@
-import {
-    IUser
-} from "../core/IModel";
+import { IUser } from "../core/models/IUser";
 
 export class User implements IUser {
-    id: string
+    id: string;
 
-    constructor(params: {
-        username: string,
-        password: string
-    }) {
-
-    }
+    constructor(params: { username: string; password: string }) {}
 
     isValid(): boolean {
         return true;

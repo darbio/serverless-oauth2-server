@@ -1,47 +1,53 @@
-import * as uuid from 'uuid/v4';
-import * as moment from 'moment'
-import { IAuthorizationCode } from "../../core/IModel";
+import * as uuid from "uuid/v4";
+import * as moment from "moment";
+import { IAuthorizationCode } from "../../core/models/IAuthorizationCode";
 
 export class AuthorizationCode implements IAuthorizationCode {
     get id(): string {
-        return this._id
+        return this._id;
     }
-    private _id: string
+    private _id: string;
 
     get clientId(): string {
-        return this._clientId
+        return this._clientId;
     }
-    private _clientId: string
+    private _clientId: string;
 
     get redirectUri(): string {
-        return this._redirectUri
+        return this._redirectUri;
     }
-    private _redirectUri: string
+    private _redirectUri: string;
 
     get subject(): string {
-        return this._subject
+        return this._subject;
     }
-    private _subject: string
+    private _subject: string;
 
     get created(): Date {
-        return this._created
+        return this._created;
     }
-    private _created: Date
+    private _created: Date;
 
     get expires(): Date {
-        return this._expires
+        return this._expires;
     }
-    private _expires: Date
+    private _expires: Date;
 
-    static create(params: { subject: string, clientId: string, redirectUrl: string }): AuthorizationCode {
-        let code = new AuthorizationCode()
+    static create(params: {
+        subject: string;
+        clientId: string;
+        redirectUrl: string;
+    }): AuthorizationCode {
+        let code = new AuthorizationCode();
 
-        code._id = uuid()
-        code._clientId = params.clientId
-        code._redirectUri = params.redirectUrl
-        code._subject = params.subject
-        code._created = new Date()
-        code._expires = moment(code._created).add(1, 'h').toDate()
+        code._id = uuid();
+        code._clientId = params.clientId;
+        code._redirectUri = params.redirectUrl;
+        code._subject = params.subject;
+        code._created = new Date();
+        code._expires = moment(code._created)
+            .add(1, "h")
+            .toDate();
 
         return code;
     }
@@ -50,6 +56,6 @@ export class AuthorizationCode implements IAuthorizationCode {
      * Returns if this autorization code is still valid
      */
     isValid(): boolean {
-        return this._expires > new Date()
+        return this._expires > new Date();
     }
 }
