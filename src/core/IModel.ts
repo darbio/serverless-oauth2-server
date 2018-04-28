@@ -10,6 +10,8 @@ export interface IAuthorizationCode {
     redirectUri: string
     created: Date
     expires: Date
+
+    isValid(): boolean
 }
 
 export interface ISession {
