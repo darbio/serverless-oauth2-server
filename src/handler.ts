@@ -24,6 +24,9 @@ import { Session } from './infrastructure/models/Session';
 import { AuthorizationCode } from './infrastructure/models/AuthorizationCode';
 import { IAuthorizationCodeRepository } from './core/repositories/IAuthorizationCodeRepository';
 import { NumberOfLaunchConfigurations } from 'aws-sdk/clients/autoscaling';
+import { Token } from './infrastructure/models/Token';
+import { ITokenRepository } from './core/repositories/ITokenRepository';
+import { TokenRepository } from './infrastructure/repositories/TokenRepository';
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -83,11 +86,28 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 
                 // Generate the access_token
                 const secret = 'SECRET'
-                let access_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret);
-                let id_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret)
+                let access_token = Token.create({
+                    type: 'access',
+                    subject: authorizationCode.subject,
+                    clientId: authorizationCode.clientId
+                })
+
+                let id_token = Token.create({
+                    type: 'id',
+                    subject: authorizationCode.subject,
+                    clientId: authorizationCode.clientId,
+                    claims: {
+                        full_name: 'Joe Bloggs',
+                        first_name: 'Joe',
+                        last_name: 'Bloggs',
+                        email_address: 'joe@bloggs.com'
+                    }
+                })
 
                 // Save the tokens to the database
-                // TODO
+                const tokenRepository: ITokenRepository = new TokenRepository();
+                await tokenRepository.save(access_token)
+                await tokenRepository.save(id_token)
 
                 // Revoke the authorization code
                 await authorizationCodeRepository.delete(authorizationCode.id)
@@ -103,8 +123,8 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
                     state?: string
 
                 } = {
-                    access_token: access_token,
-                    id_token: id_token,
+                    access_token: access_token.toJwt(secret),
+                    id_token: id_token.toJwt(secret),
                     token_type: 'bearer',
                     expires_in: Math.round(moment.duration(moment(moment().add(1, 'h')).diff(moment(new Date()))).asSeconds()),
                 };
