@@ -69,6 +69,10 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
                 const authorizationCodeRepository: IAuthorizationCodeRepository = new AuthorizationCodeRepository()
                 const authorizationCode = await authorizationCodeRepository.get(code)
 
+                if (authorizationCode === null) {
+                    throw new Error('Non-existant authorization code')
+                }
+
                 // Validate
                 if (redirect_uri !== authorizationCode.redirectUri) {
                     throw new Error('Invalid redirect url')
@@ -82,8 +86,11 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
                 let access_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret);
                 let id_token = jsonwebtoken.sign({ sub: authorizationCode.subject, aud: authorizationCode.clientId, iss: 'https://idp.darb.io', exp: moment(moment().add(1, 'h')).unix() }, secret)
 
+                // Save the tokens to the database
+                // TODO
+
                 // Revoke the authorization code
-                // await authorizationCodeRepository.de
+                await authorizationCodeRepository.delete(authorizationCode.id)
 
                 // Response
                 let response: {
@@ -130,7 +137,7 @@ export async function token(event: APIGatewayProxyEvent, context: Context, callb
 };
 
 // code - authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
-// token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
+// *not implemented* token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
 export async function authorize(event: APIGatewayProxyEvent, context: Context, callback: Callback < APIGatewayProxyResult > ) {
     try {
         // Validate client_id
