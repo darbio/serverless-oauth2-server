@@ -9,8 +9,6 @@ import * as jsonwebtoken from "jsonwebtoken";
 import * as validator from "validator";
 import * as moment from "moment";
 
-import { IUserLoginService } from "./core/IUserLoginService";
-import { UserLoginService } from "./infrastructure/UserLoginService";
 import { DynamoDbRepository } from "./infrastructure/repositories/DynamoDbRepository";
 import { SessionRepository } from "./infrastructure/repositories/SessionRepository";
 import { AuthorizationCodeRepository } from "./infrastructure/repositories/AuthorizationCodeRepository";
@@ -21,6 +19,8 @@ import { NumberOfLaunchConfigurations } from "aws-sdk/clients/autoscaling";
 import { Token } from "./infrastructure/models/Token";
 import { ITokenRepository } from "./core/repositories/ITokenRepository";
 import { TokenRepository } from "./infrastructure/repositories/TokenRepository";
+import { IUserRepository } from "./core/repositories/IUserRepository";
+import { UserRepository } from "./infrastructure/repositories/UserRepository";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -313,9 +313,14 @@ export async function login(
                 return;
             }
 
-            const userLoginService: IUserLoginService = new UserLoginService();
+            const userRepository: IUserRepository = new UserRepository();
+            const user = await userRepository.get(username);
 
-            if (await userLoginService.login(username, password)) {
+            if (!user) {
+                throw new Error("Username invalid");
+            }
+
+            if (user.login(password)) {
                 // Login successful
                 if (session.responseType === "token") {
                     throw new Error("Not implemented");

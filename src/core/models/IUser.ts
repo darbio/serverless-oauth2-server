@@ -1,4 +1,4 @@
 export interface IUser {
-    id: string
-    isValid(): boolean
+    id: string;
+    login(password: string): boolean;
 }

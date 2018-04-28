@@ -1,9 +1,9 @@
 import * as aws from "aws-sdk";
 
 export abstract class DynamoDbRepository<T> {
-    private client: aws.DynamoDB.DocumentClient;
+    protected client: aws.DynamoDB.DocumentClient;
 
-    constructor(private tableName: string) {
+    constructor(protected tableName: string) {
         this.client = new aws.DynamoDB.DocumentClient({
             endpoint: "http://localhost:4569",
             region: "ap-southeast-2"
