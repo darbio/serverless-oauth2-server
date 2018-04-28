@@ -1,6 +1,5 @@
 import { DynamoDbRepository } from "./DynamoDbRepository";
 import { IUserRepository } from "../../core/repositories/IUserRepository";
-import { IUser } from "../../core/models/IUser";
 import { User } from "../models/User";
 import * as aws from "aws-sdk";
 
