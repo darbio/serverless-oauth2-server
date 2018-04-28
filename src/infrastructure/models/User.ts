@@ -30,7 +30,7 @@ export class User implements IUser {
     static create(params: {
         username: string;
         password: string;
-        claims: { [key: string]: string };
+        claims?: { [key: string]: string };
     }): User {
         let user = new User();
         user._id = params.username; // TODO MD5 hash the username

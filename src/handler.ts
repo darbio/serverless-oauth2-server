@@ -133,6 +133,12 @@ export async function token(
                     return;
                 }
 
+                // Get the user
+                const userRepository: IUserRepository = new UserRepository();
+                const user = await userRepository.get(
+                    authorizationCode.subject
+                );
+
                 // Generate the access_token
                 const secret = "SECRET";
                 let access_token = Token.create({
@@ -145,12 +151,7 @@ export async function token(
                     type: "id",
                     subject: authorizationCode.subject,
                     clientId: authorizationCode.clientId,
-                    claims: {
-                        full_name: "Joe Bloggs",
-                        first_name: "Joe",
-                        last_name: "Bloggs",
-                        email_address: "joe@bloggs.com"
-                    }
+                    claims: user.claims
                 });
 
                 // Save the tokens to the database
