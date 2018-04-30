@@ -24,6 +24,7 @@ import { UserRepository } from "./infrastructure/repositories/UserRepository";
 import { IClientRepository } from "./core/repositories/IClientRepository";
 import { ClientRepository } from "./infrastructure/repositories/ClientRepository";
 import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
+import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -45,86 +46,8 @@ export async function authorize(
     context: Context,
     callback: Callback<APIGatewayProxyResult>
 ) {
-    try {
-        // Validate client_id
-        const client_id = event.queryStringParameters.client_id;
-
-        let clientRepository: IClientRepository = new ClientRepository();
-        let client = await clientRepository.get(client_id);
-
-        if (!client) {
-            callback(null, {
-                statusCode: 401,
-                body: JSON.stringify({
-                    error: "invalid_client",
-                    error_description: "Request contains an invalid client id."
-                })
-            });
-            return;
-        }
-
-        // Validate client_secret
-        const clientSecret = event.queryStringParameters.client_secret;
-        if (clientSecret) {
-            if (client.secret && clientSecret !== client.secret) {
-                callback(null, {
-                    statusCode: 401,
-                    body: JSON.stringify({
-                        error: "invalid_client",
-                        error_description:
-                            "Request contains an invalid client secret."
-                    })
-                });
-                return;
-            }
-        }
-
-        // Validate redirect_uri
-        const redirectUri = event.queryStringParameters.redirect_uri;
-        if (
-            client.redirectUris &&
-            client.redirectUris.indexOf(redirectUri) > -1
-        ) {
-            callback(null, {
-                statusCode: 401,
-                body: JSON.stringify({
-                    error: "invalid_grant",
-                    error_description:
-                        "Request contains an invalid redirect uri."
-                })
-            });
-            return;
-        }
-
-        // Create a new session
-        let session = Session.Create({
-            clientId: client_id,
-            responseType: event.queryStringParameters.response_type as
-                | "code"
-                | "token",
-            redirectUri: event.queryStringParameters.redirect_uri,
-            state: event.queryStringParameters.state
-        });
-
-        const sessionRepository = new SessionRepository();
-        await sessionRepository.save(session);
-
-        callback(null, {
-            statusCode: 302,
-            headers: {
-                Location: session.getLoginUrl()
-            },
-            body: null
-        });
-    } catch (err) {
-        callback(err, {
-            statusCode: 500,
-            body: JSON.stringify({
-                error: "server_error",
-                error_description: err.message
-            })
-        });
-    }
+    let handler = new AuthorizeHandler();
+    await handler.get(event, context, callback);
 }
 
 // login?session=1234
