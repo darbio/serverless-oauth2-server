@@ -237,12 +237,56 @@ export async function authorize(
 ) {
     try {
         // Validate client_id
-        // TODO - move to a service
         const client_id = event.queryStringParameters.client_id;
-        if (client_id !== "167c05ab-4a58-47dc-b695-388f8bca6e43") {
-            throw new Error("Invalid client id");
+
+        let clientRepository: IClientRepository = new ClientRepository();
+        let client = await clientRepository.get(client_id);
+
+        if (!client) {
+            callback(null, {
+                statusCode: 401,
+                body: JSON.stringify({
+                    error: "invalid_client",
+                    error_description: "Request contains an invalid client id."
+                })
+            });
+            return;
         }
 
+        // Validate client_secret
+        const clientSecret = event.queryStringParameters.client_secret;
+        if (clientSecret) {
+            if (client.secret && clientSecret !== client.secret) {
+                callback(null, {
+                    statusCode: 401,
+                    body: JSON.stringify({
+                        error: "invalid_client",
+                        error_description:
+                            "Request contains an invalid client secret."
+                    })
+                });
+                return;
+            }
+        }
+
+        // Validate redirect_uri
+        const redirectUri = event.queryStringParameters.redirect_uri;
+        if (
+            client.redirectUris &&
+            client.redirectUris.indexOf(redirectUri) > -1
+        ) {
+            callback(null, {
+                statusCode: 401,
+                body: JSON.stringify({
+                    error: "invalid_grant",
+                    error_description:
+                        "Request contains an invalid redirect uri."
+                })
+            });
+            return;
+        }
+
+        // Create a new session
         let session = Session.Create({
             clientId: client_id,
             responseType: event.queryStringParameters.response_type as
