@@ -10,7 +10,6 @@ import { SessionRepository } from "./infrastructure/repositories/SessionReposito
 import { AuthorizationCodeRepository } from "./infrastructure/repositories/AuthorizationCodeRepository";
 import { AuthorizationCode } from "./infrastructure/models/AuthorizationCode";
 import { IAuthorizationCodeRepository } from "./core/repositories/IAuthorizationCodeRepository";
-import { NumberOfLaunchConfigurations } from "aws-sdk/clients/autoscaling";
 import { Token } from "./infrastructure/models/Token";
 import { ITokenRepository } from "./core/repositories/ITokenRepository";
 import { TokenRepository } from "./infrastructure/repositories/TokenRepository";
