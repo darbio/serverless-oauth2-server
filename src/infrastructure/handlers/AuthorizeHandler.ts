@@ -4,22 +4,8 @@ import {
     Callback,
     APIGatewayProxyResult
 } from "aws-lambda";
-import * as qs from "querystring";
-import * as jsonwebtoken from "jsonwebtoken";
-import * as validator from "validator";
-import * as moment from "moment";
-
-import { DynamoDbRepository } from "../repositories/DynamoDbRepository";
 import { SessionRepository } from "../repositories/SessionRepository";
-import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
 import { Session } from "../models/Session";
-import { AuthorizationCode } from "../models/AuthorizationCode";
-import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
-import { Token } from "../models/Token";
-import { ITokenRepository } from "../../core/repositories/ITokenRepository";
-import { TokenRepository } from "../repositories/TokenRepository";
-import { IUserRepository } from "../../core/repositories/IUserRepository";
-import { UserRepository } from "../repositories/UserRepository";
 import { IClientRepository } from "../../core/repositories/IClientRepository";
 import { ClientRepository } from "../repositories/ClientRepository";
 import { Handler } from "../../core/handler";

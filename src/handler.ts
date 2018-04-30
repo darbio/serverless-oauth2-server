@@ -5,14 +5,9 @@ import {
     APIGatewayProxyResult
 } from "aws-lambda";
 import * as qs from "querystring";
-import * as jsonwebtoken from "jsonwebtoken";
-import * as validator from "validator";
-import * as moment from "moment";
 
-import { DynamoDbRepository } from "./infrastructure/repositories/DynamoDbRepository";
 import { SessionRepository } from "./infrastructure/repositories/SessionRepository";
 import { AuthorizationCodeRepository } from "./infrastructure/repositories/AuthorizationCodeRepository";
-import { Session } from "./infrastructure/models/Session";
 import { AuthorizationCode } from "./infrastructure/models/AuthorizationCode";
 import { IAuthorizationCodeRepository } from "./core/repositories/IAuthorizationCodeRepository";
 import { NumberOfLaunchConfigurations } from "aws-sdk/clients/autoscaling";
