@@ -309,7 +309,10 @@ export async function authorize(
     } catch (err) {
         callback(err, {
             statusCode: 500,
-            body: JSON.stringify(err)
+            body: JSON.stringify({
+                error: "server_error",
+                error_description: err.message
+            })
         });
     }
 }
