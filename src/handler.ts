@@ -21,6 +21,8 @@ import { ITokenRepository } from "./core/repositories/ITokenRepository";
 import { TokenRepository } from "./infrastructure/repositories/TokenRepository";
 import { IUserRepository } from "./core/repositories/IUserRepository";
 import { UserRepository } from "./infrastructure/repositories/UserRepository";
+import { IClientRepository } from "./core/repositories/IClientRepository";
+import { ClientRepository } from "./infrastructure/repositories/ClientRepository";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -33,9 +35,12 @@ export async function token(
 ) {
     try {
         // Validate client_id
-        // TODO - move to a service
         const client_id = event.queryStringParameters.client_id;
-        if (client_id !== "167c05ab-4a58-47dc-b695-388f8bca6e43") {
+
+        let clientRepository: IClientRepository = new ClientRepository();
+        let client = await clientRepository.get(client_id);
+
+        if (!client) {
             callback(null, {
                 statusCode: 401,
                 body: JSON.stringify({
@@ -47,11 +52,9 @@ export async function token(
         }
 
         // Validate client_secret
-        // TODO - move to a service
-        if (event.queryStringParameters.client_secret) {
-            const client_secret = event.queryStringParameters.client_secret;
-
-            if (client_secret !== "SECRET") {
+        const clientSecret = event.queryStringParameters.client_secret;
+        if (clientSecret) {
+            if (client.secret && clientSecret !== client.secret) {
                 callback(null, {
                     statusCode: 401,
                     body: JSON.stringify({
