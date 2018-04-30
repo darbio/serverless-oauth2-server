@@ -70,7 +70,7 @@ export async function token(
             case "authorization_code":
                 // Validate code
                 const code = event.queryStringParameters.code;
-                if (!validator.isUUID(code)) {
+                if (!validator.isLength(code, 32)) {
                     throw new Error("Invalid authorization code");
                 }
 
@@ -217,6 +217,7 @@ export async function token(
                 return;
         }
     } catch (err) {
+        console.error(err);
         callback(null, {
             statusCode: 500,
             body: JSON.stringify(err)

@@ -1,4 +1,4 @@
-import * as uuid from "uuid/v4";
+import * as crypto from "crypto";
 import * as moment from "moment";
 import { IAuthorizationCode } from "../../core/models/IAuthorizationCode";
 
@@ -40,7 +40,7 @@ export class AuthorizationCode implements IAuthorizationCode {
     }): AuthorizationCode {
         let code = new AuthorizationCode();
 
-        code._id = uuid();
+        code._id = crypto.randomBytes(16).toString("hex");
         code._clientId = params.clientId;
         code._redirectUri = params.redirectUrl;
         code._subject = params.subject;
