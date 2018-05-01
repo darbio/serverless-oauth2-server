@@ -40,6 +40,11 @@ export class Session implements ISession {
     }
     private _expires: Date;
 
+    private _provider: string;
+    public get provider(): string {
+        return this._provider;
+    }
+
     /**
      * Creates a new session
      * @param params

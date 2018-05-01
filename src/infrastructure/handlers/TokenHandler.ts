@@ -56,7 +56,7 @@ export class TokenHandler extends Handler {
             if (client.grantType !== grant_type) {
                 return this.BadRequest(callback, {
                     error: "unsupported_grant_type",
-                    error_description: "Grant type not supported."
+                    error_description: `Grant type not supported`
                 });
             }
 
@@ -90,14 +90,6 @@ export class TokenHandler extends Handler {
         // Validate code
         if (!validator.isLength(code, 32)) {
             throw new Error("Invalid authorization code");
-        }
-
-        // Validate redirect_uri
-        if (!validator.isURL(redirect_uri)) {
-            return this.BadRequest(callback, {
-                error: "invalid_grant",
-                error_description: "The redirect uri code is invalid."
-            });
         }
 
         // Get the auth_code

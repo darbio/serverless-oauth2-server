@@ -17,6 +17,25 @@ functions:
       - http:
           path: oauth/authorize
           method: get
+  providers:
+    handler: src/handler.providers
+    events:
+      - http:
+          path: providers/{providerId}
+          method: get
+          parameters:
+              paths:
+                providerId: true
+  callback:
+    handler: src/handler.callback
+    events:
+      - http:
+          path: callback/{providerId}
+          method: get
+          parameters:
+              paths:
+                providerId: true
+          
   login:
     handler: src/handler.login
     events:

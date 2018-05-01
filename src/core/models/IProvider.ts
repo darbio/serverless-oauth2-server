@@ -1,0 +1,10 @@
+export interface IProvider {
+    id: string;
+    clientId: string;
+    clientSecret: string;
+    authorizationUrl: string;
+    tokenUrl: string;
+    callbackUrl: string;
+    profileUrl: string;
+    scope: string[];
+}

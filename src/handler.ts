@@ -19,6 +19,8 @@ import { IClientRepository } from "./core/repositories/IClientRepository";
 import { ClientRepository } from "./infrastructure/repositories/ClientRepository";
 import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
 import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
+import { CallbackHandler } from "./infrastructure/handlers/CallbackHandler";
+import { ProvidersHandler } from "./infrastructure/handlers/ProvidersHandler";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -33,14 +35,50 @@ export async function token(
     await handler.get(event, context, callback);
 }
 
-// code - authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
-// *not implemented* token (implicit) - authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
+/**
+ * Authorize endpoint:
+ * authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read
+ * authorize?response_type=token&client_id=CLIENT_ID&redirect_uri=CALLBACK_URL&scope=read+write
+ * @param event
+ * @param context
+ * @param callback
+ */
 export async function authorize(
     event: APIGatewayProxyEvent,
     context: Context,
     callback: Callback<APIGatewayProxyResult>
 ) {
     let handler = new AuthorizeHandler();
+    await handler.get(event, context, callback);
+}
+
+/**
+ * Callback handler
+ * @param event
+ * @param context
+ * @param callback
+ */
+export async function callback(
+    event: APIGatewayProxyEvent,
+    context: Context,
+    callback: Callback<APIGatewayProxyResult>
+) {
+    let handler = new CallbackHandler();
+    await handler.get(event, context, callback);
+}
+
+/**
+ * Providers handler
+ * @param event
+ * @param context
+ * @param callback
+ */
+export async function providers(
+    event: APIGatewayProxyEvent,
+    context: Context,
+    callback: Callback<APIGatewayProxyResult>
+) {
+    let handler = new ProvidersHandler();
     await handler.get(event, context, callback);
 }
 
@@ -71,6 +109,7 @@ export async function login(
                                     <button type="submit">Login</button>
                                 </div>
                             </form>
+                            <a href="/providers/google_server?session=${sessionId}">Login with Google</a>
                         </html>
                     `
             });
