@@ -27,7 +27,7 @@ export class ExternalUser extends User implements IExternalUser {
         return this._refreshToken;
     }
 
-    type: "external";
+    type: "external" = "external";
 
     /**
      * Creates a user from an external provider
@@ -48,7 +48,7 @@ export class ExternalUser extends User implements IExternalUser {
 
 export class InternalUser extends User implements IInternalUser {
     private _passwordHash: string;
-    type: "internal";
+    type: "internal" = "internal";
 
     /**
      * Compares a password to the stored hash

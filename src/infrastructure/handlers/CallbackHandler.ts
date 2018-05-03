@@ -83,13 +83,13 @@ export class CallbackHandler extends Handler {
             }
 
             let userRepository: IUserRepository = new UserRepository();
-            let user = userRepository.get(username);
+            let user = await userRepository.get(username);
 
             // If the user doesn't already exist with this id, create them
             if (!user) {
                 let newUser: IUser = ExternalUser.create({
                     username: username,
-                    refreshToken: "",
+                    refreshToken: body.refresh_token,
                     provider: provider.id
                 });
                 await userRepository.save(newUser);

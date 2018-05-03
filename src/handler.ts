@@ -113,7 +113,7 @@ export async function login(
                                     <button type="submit">Login</button>
                                 </div>
                             </form>
-                            <a href="/providers/google_server?session=${sessionId}">Login with Google</a>
+                            <a href="/providers/google?session=${sessionId}">Login with Google</a>
                         </html>
                     `
             });
