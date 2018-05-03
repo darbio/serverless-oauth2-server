@@ -48,13 +48,6 @@ functions:
       - http:
           path: login
           method: get
-
-  settings:
-    handler: src/handler.settings
-    events:
-      - http:
-          path: settings
-          method: get
           
 plugins:
   - serverless-webpack

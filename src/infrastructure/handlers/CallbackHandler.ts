@@ -121,7 +121,7 @@ export class CallbackHandler extends Handler {
                 );
                 await userRepository.save(user);
             }
-
+            console.log(providerSession.sessionId);
             // Get the original session
             let sessionRepository: ISessionRepository = new SessionRepository();
             let session = await sessionRepository.get(
