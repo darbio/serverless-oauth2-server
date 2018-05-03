@@ -12,6 +12,11 @@ export class Client implements IClient {
     }
     private _secret?: string;
 
+    private _jwtSecret: string;
+    public get jwtSecret(): string {
+        return this._jwtSecret;
+    }
+
     get redirectUris(): string[] | undefined {
         return this._redirectUris;
     }
@@ -24,12 +29,14 @@ export class Client implements IClient {
 
     static create(params: {
         grantType: "code" | "token" | "password";
+        jwtSecret: string;
         secret?: string;
         redirectUris?: string[];
     }): Client {
         let client = new Client();
         client._id = uuid();
         client._grantType = params.grantType;
+        client._jwtSecret = params.jwtSecret;
 
         if (params.grantType === "code" || params.grantType == "token") {
             client._redirectUris = params.redirectUris;

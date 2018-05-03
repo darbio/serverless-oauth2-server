@@ -114,7 +114,9 @@ export class TokenHandler extends Handler {
 
         // Validate
         const client_id = event.queryStringParameters.client_id;
-        if (client_id !== authorizationCode.clientId) {
+        let clientRepository: IClientRepository = new ClientRepository();
+        let client = await clientRepository.get(client_id);
+        if (client_id !== authorizationCode.clientId || !client) {
             return this.Unauthorized(callback, {
                 error: "invalid_client",
                 error_description: "Request contains an invalid client id."
@@ -126,7 +128,7 @@ export class TokenHandler extends Handler {
         const user = await userRepository.get(authorizationCode.subject);
 
         // Generate the access_token
-        const secret = "SECRET";
+        const secret = client.jwtSecret;
         let access_token = UserToken.create({
             type: "access",
             clientId: authorizationCode.clientId,

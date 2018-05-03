@@ -5,6 +5,7 @@ import { Client } from "../models/Client";
 interface IClientDataObject {
     id: string;
     secret?: string;
+    jwtSecret: string;
     redirectUris?: string[];
     grantType: string;
 }
@@ -19,6 +20,7 @@ export class ClientRepository extends DynamoDbRepository<Client>
         return <IClientDataObject>{
             id: domainObject.id,
             secret: domainObject.secret,
+            jwtSecret: domainObject.jwtSecret,
             grantType: domainObject.grantType,
             redirectUris: domainObject.redirectUris
         };
@@ -29,6 +31,7 @@ export class ClientRepository extends DynamoDbRepository<Client>
 
         client["_id"] = businessObject.id;
         client["_secret"] = businessObject.secret;
+        client["_jwtSecret"] = businessObject.jwtSecret;
         client["_grantType"] = businessObject.grantType;
         client["_redirectUris"] = businessObject.redirectUris;
 

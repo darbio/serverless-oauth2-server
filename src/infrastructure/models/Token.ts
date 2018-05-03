@@ -74,7 +74,7 @@ export class UserToken implements IUserToken {
         let payload: any = {
             sub: this.user.id,
             aud: this.clientId,
-            iat: new Date().getTime(),
+            iat: moment(new Date()).unix(),
             exp: moment(moment().add(1, "h")).unix(),
             iss: "https://idp.darb.io",
             token_id: this.id
