@@ -130,11 +130,10 @@ export async function login(
 
             // Validate the session
             if (!session.isValid()) {
-                callback(new Error("Session has expired"), {
+                return callback(new Error("Session has expired"), {
                     statusCode: 401,
                     body: null
                 });
-                return;
             }
 
             const userRepository: IUserRepository = new UserRepository();
@@ -170,7 +169,7 @@ export async function login(
                     const url = `${session.redirectUri}?code=${code.id}&state=${
                         session.state
                     }`;
-                    callback(null, {
+                    return callback(null, {
                         statusCode: 302,
                         headers: {
                             Location: url
@@ -180,7 +179,7 @@ export async function login(
                 }
             } else {
                 // Login failed
-                callback(null, {
+                return callback(null, {
                     statusCode: 401,
                     body: JSON.stringify({
                         message: "Invalid credentials"
@@ -189,7 +188,7 @@ export async function login(
             }
         }
     } catch (err) {
-        callback(err, {
+        return callback(err, {
             statusCode: 500,
             body: JSON.stringify(err)
         });
