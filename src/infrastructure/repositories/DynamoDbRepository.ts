@@ -1,4 +1,5 @@
 import * as aws from "aws-sdk";
+import * as crypto from "crypto";
 
 export abstract class DynamoDbRepository<T> {
     protected client: aws.DynamoDB.DocumentClient;
@@ -64,5 +65,35 @@ export abstract class DynamoDbRepository<T> {
                 }
             });
         });
+    }
+
+    protected encrypt(unencrypted?: string): string {
+        if (!unencrypted) {
+            return null;
+        }
+
+        let algorithm = "aes256";
+        let key = process.env.DB_ENCRYPTION_KEY;
+
+        let cipher = crypto.createCipher(algorithm, key);
+        let encrypted =
+            cipher.update(unencrypted, "utf8", "hex") + cipher.final("hex");
+
+        return encrypted;
+    }
+
+    protected decrypt(encrypted?: string): string {
+        if (!encrypted) {
+            return null;
+        }
+
+        let algorithm = "aes256";
+        let key = process.env.DB_ENCRYPTION_KEY;
+
+        let decipher = crypto.createDecipher(algorithm, key);
+        let decrypted =
+            decipher.update(encrypted, "hex", "utf8") + decipher.final("utf8");
+
+        return decrypted;
     }
 }

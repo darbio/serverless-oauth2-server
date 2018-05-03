@@ -11,3 +11,7 @@ jspm_packages
 # other
 .DS_Store
 data
+
+# Secrets
+src/config/config.*.json
+!src/config/config.example.json

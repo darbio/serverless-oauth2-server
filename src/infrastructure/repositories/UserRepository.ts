@@ -28,7 +28,7 @@ interface IUserIdentityDataObject {
     type: "internal" | "external";
     passwordHash?: string;
     provider?: string;
-    refreshToken?: string;
+    refreshToken_encrypted?: string;
 }
 
 export class UserRepository extends DynamoDbRepository<IUser>
@@ -49,7 +49,9 @@ export class UserRepository extends DynamoDbRepository<IUser>
             } else {
                 let typedIdentity = new ExternalIdentity();
                 typedIdentity["_provider"] = item.provider;
-                typedIdentity["_refreshToken"] = item.refreshToken;
+                typedIdentity["_refreshToken"] = this.decrypt(
+                    item.refreshToken_encrypted
+                );
                 identity = typedIdentity;
             }
 
@@ -86,7 +88,9 @@ export class UserRepository extends DynamoDbRepository<IUser>
                     } else {
                         let typedItem = item as IExternalIdentity;
                         data.provider = typedItem.provider;
-                        data.refreshToken = typedItem.refreshToken;
+                        data.refreshToken_encrypted = this.encrypt(
+                            typedItem.refreshToken
+                        );
                     }
                     return data;
                 }
