@@ -44,15 +44,18 @@ export class User implements IUser {
      */
     static createExternalUser(params: {
         username: string;
-        provider: string;
+        provider: {
+            id: string;
+            sub: string;
+        };
         refreshToken: string;
     }) {
         let user = new User();
         user._id = params.username;
 
         let identity = ExternalIdentity.create({
-            sub: params.username,
-            provider: params.provider,
+            sub: params.provider.sub,
+            provider: params.provider.id,
             refreshToken: params.refreshToken
         });
         user.addExternalIdentity(identity);
@@ -68,6 +71,9 @@ export class User implements IUser {
         if (!this._identities) {
             this._identities = [];
         }
+        if (this.identities.filter(a => a.type === "internal").length > 0) {
+            throw new Error("Only one internal identity can exist on a user");
+        }
         this._identities.push(identity);
     }
 
@@ -78,9 +84,6 @@ export class User implements IUser {
     addExternalIdentity(identity: IExternalIdentity) {
         if (!this._identities) {
             this._identities = [];
-        }
-        if (this.identities.filter(a => a.type === "internal").length > 0) {
-            throw new Error("Only one internal identity can exist on a user");
         }
         this._identities.push(identity);
     }
@@ -93,7 +96,7 @@ export class User implements IUser {
     hasIdentityFromExternalProvider(params: { provider: string }): boolean {
         return (
             this.identities.filter(a => {
-                if (a.type == "external") {
+                if (a.type === "external") {
                     let typed = a as ExternalIdentity;
                     return typed.provider === params.provider;
                 }

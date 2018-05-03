@@ -88,14 +88,19 @@ export class CallbackHandler extends Handler {
 
             if (!user) {
                 // Create the user
-                let newUser: IUser = User.createExternalUser({
+                user = User.createExternalUser({
                     username: username,
                     refreshToken: body.refresh_token,
-                    provider: provider.id
+                    provider: {
+                        id: provider.id,
+                        sub: sub
+                    }
                 });
-                await userRepository.save(newUser);
-            } else if (
-                // Add this identity provider to the user if it doesn't already exist
+                await userRepository.save(user);
+            }
+
+            // Add this identity provider to the user if it doesn't already exist
+            if (
                 !user.hasIdentityFromExternalProvider({ provider: provider.id })
             ) {
                 user.addExternalIdentity(
@@ -105,6 +110,7 @@ export class CallbackHandler extends Handler {
                         refreshToken: body.refresh_token
                     })
                 );
+                await userRepository.save(user);
             }
 
             // Get the original session

@@ -59,7 +59,6 @@ export class ProvidersHandler extends Handler {
             let codeUrl = `${provider.authorizationUrl}?${querystring.stringify(
                 params
             )}`;
-            console.log(codeUrl);
 
             // Redirect user to provider
             return this.Redirect(callback, codeUrl);
