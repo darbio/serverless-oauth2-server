@@ -74,6 +74,9 @@ export class CallbackHandler extends Handler {
                 expires: number;
             } = JSON.parse(tokenRequest);
 
+            // Verify the signature of the JWT
+            // TODO
+
             // Get the profile so we can create a user in our system
             let jwt = jsonwebtoken.decode(body.id_token);
             let username = jwt["email"];
