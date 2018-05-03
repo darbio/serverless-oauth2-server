@@ -4,6 +4,7 @@ import {
     Callback,
     APIGatewayProxyResult
 } from "aws-lambda";
+import * as querystring from "querystring";
 import { SessionRepository } from "../repositories/SessionRepository";
 import { Session } from "../models/Session";
 import { IClientRepository } from "../../core/repositories/IClientRepository";
@@ -45,10 +46,7 @@ export class AuthorizeHandler extends Handler {
             }
 
             // Validate redirect_uri
-            if (
-                client.redirectUris &&
-                client.redirectUris.indexOf(redirectUri) > -1
-            ) {
+            if (client.redirectUris.indexOf(redirectUri) === -1) {
                 return this.Unauthorized(callback, {
                     error: "invalid_grant",
                     error_description:

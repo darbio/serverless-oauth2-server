@@ -114,6 +114,7 @@ export async function login(
                                 </div>
                             </form>
                             <a href="/providers/google?session=${sessionId}">Login with Google</a>
+                            <a href="/providers/local?session=${sessionId}">Login with Local</a>
                         </html>
                     `
             });
@@ -127,6 +128,7 @@ export async function login(
             const sessionRepository = new SessionRepository();
             const session = await sessionRepository.get(sessionId);
 
+            // Validate the session
             if (!session.isValid()) {
                 callback(new Error("Session has expired"), {
                     statusCode: 401,

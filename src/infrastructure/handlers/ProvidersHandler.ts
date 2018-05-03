@@ -17,6 +17,12 @@ import { ProviderSessionRepository } from "../repositories/ProviderSessionReposi
 import { ProviderSession } from "../models/ProviderSession";
 
 export class ProvidersHandler extends Handler {
+    /**
+     * Get request to redirect to external providers
+     * @param event
+     * @param context
+     * @param callback
+     */
     async get(
         event: APIGatewayProxyEvent,
         context: Context,
