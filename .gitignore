@@ -10,7 +10,7 @@ jspm_packages
 
 # other
 .DS_Store
-data
+data/**
 
 # Secrets
 src/config/config.*.json
