@@ -5,7 +5,7 @@ provider:
   runtime: nodejs6.10
   stage: local
   environment:
-    DB_ENCRYPTION_KEY: ${file(src/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
+    DB_ENCRYPTION_KEY: ${file(src/config/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
 
 functions:
   token:
@@ -47,6 +47,13 @@ functions:
           method: post
       - http:
           path: login
+          method: get
+
+  settings:
+    handler: src/handler.settings
+    events:
+      - http:
+          path: settings
           method: get
           
 plugins:
