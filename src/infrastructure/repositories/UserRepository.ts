@@ -12,6 +12,15 @@ import {
 interface IUserDataObject {
     id: string;
     identities: IUserIdentityDataObject[];
+
+    emailAddress: string;
+    emailVerified: boolean;
+
+    name: string;
+    givenName: string;
+    familyName: string;
+
+    pictureUrl?: string;
 }
 
 interface IUserIdentityDataObject {
@@ -49,6 +58,16 @@ export class UserRepository extends DynamoDbRepository<IUser>
 
             return identity;
         });
+
+        user["_emailAddress"] = dataObject.emailAddress;
+        user["_emailVerified"] = dataObject.emailVerified;
+
+        user["_name"] = dataObject.name;
+        user["_givenName"] = dataObject.givenName;
+        user["_familyName"] = dataObject.familyName;
+
+        user["_pictureUrl"] = dataObject.pictureUrl;
+
         return user;
     }
 
@@ -71,7 +90,13 @@ export class UserRepository extends DynamoDbRepository<IUser>
                     }
                     return data;
                 }
-            )
+            ),
+            emailAddress: businessObject.emailAddress,
+            emailVerified: businessObject.emailVerified,
+            name: businessObject.name,
+            givenName: businessObject.givenName,
+            familyName: businessObject.familyName,
+            pictureUrl: businessObject.pictureUrl
         };
         return dataObject;
     }

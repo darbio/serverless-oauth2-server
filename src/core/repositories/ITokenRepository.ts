@@ -1,4 +1,4 @@
 import { IGet, ISave } from "./IRepository";
-import { IToken } from "../models/IToken";
+import { IUserToken } from "../models/IToken";
 
-export interface ITokenRepository extends ISave<IToken> {}
+export interface ITokenRepository extends ISave<IUserToken> {}

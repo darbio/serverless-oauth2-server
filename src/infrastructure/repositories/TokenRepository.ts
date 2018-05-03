@@ -1,47 +1,33 @@
 import { DynamoDbRepository } from "./DynamoDbRepository";
 import { ITokenRepository } from "../../core/repositories/ITokenRepository";
-import { Token } from "../models/Token";
-import { IToken } from "../../core/models/IToken";
+import { UserToken } from "../models/Token";
+import { IUserToken } from "../../core/models/IToken";
 
 interface ITokenDataObject {
     id: string;
     type: "access" | "id";
     subject: string;
     clientId: string;
-    claims: {
-        [key: string]: string;
-    };
     created: number;
     expires: number;
 }
 
-export class TokenRepository extends DynamoDbRepository<IToken>
+export class TokenRepository extends DynamoDbRepository<IUserToken>
     implements ITokenRepository {
     constructor() {
         super("authorization_tokens");
     }
 
-    toDomainObject(dataObject: ITokenDataObject): IToken {
-        let token = new Token();
-
-        token["_id"] = dataObject.id;
-        token["_type"] = dataObject.type;
-        token["_subject"] = dataObject.subject;
-        token["_clientId"] = dataObject.clientId;
-        token["_claims"] = dataObject.claims;
-        token["_created"] = new Date(dataObject.created);
-        token["_expires"] = new Date(dataObject.expires);
-
-        return token;
+    toDomainObject(dataObject: ITokenDataObject): IUserToken {
+        throw new Error("Not implemented");
     }
 
-    toDataObject(businessObject: IToken): ITokenDataObject {
+    toDataObject(businessObject: IUserToken): ITokenDataObject {
         return <ITokenDataObject>{
             id: businessObject.id,
+            subject: businessObject.user.id,
             type: businessObject.type,
-            subject: businessObject.subject,
             clientId: businessObject.clientId,
-            claims: businessObject.claims,
             created: businessObject.created.getTime(),
             expires: businessObject.expires.getTime()
         };

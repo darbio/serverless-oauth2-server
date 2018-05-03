@@ -1,37 +1,30 @@
 import * as uuid from "uuid/v4";
+import * as crypto from "crypto";
 import * as moment from "moment";
 import * as jsonwebtoken from "jsonwebtoken";
-import { IToken } from "../../core/models/IToken";
+import { IUserToken } from "../../core/models/IToken";
+import { IUser } from "../../core/models/IUser";
 
-export class Token implements IToken {
+export class UserToken implements IUserToken {
     get id(): string {
         return this._id;
     }
     private _id: string;
+
+    private _user: IUser;
+    public get user(): IUser {
+        return this._user;
+    }
 
     get type(): "access" | "id" {
         return this._type;
     }
     private _type: "access" | "id";
 
-    get subject(): string {
-        return this._subject;
-    }
-    private _subject: string;
-
     get clientId(): string {
         return this._clientId;
     }
     private _clientId: string;
-
-    get claims(): {
-        [key: string]: string;
-    } {
-        return this._claims;
-    }
-    private _claims: {
-        [key: string]: string;
-    };
 
     get created(): Date {
         return this._created;
@@ -43,21 +36,21 @@ export class Token implements IToken {
     }
     private _expires: Date;
 
+    /**
+     * Creates a user token
+     * @param params
+     */
     static create(params: {
         type: "access" | "id";
-        subject: string;
         clientId: string;
-        claims?: {
-            [key: string]: string;
-        };
-    }): Token {
-        let token = new Token();
+        user: IUser;
+    }): UserToken {
+        let token = new UserToken();
 
         token._id = uuid();
+        token._user = params.user;
         token._type = params.type;
-        token._subject = params.subject;
         token._clientId = params.clientId;
-        token._claims = params.claims;
         token._created = new Date();
         token._expires = moment(token._created)
             .add(1, "h")
@@ -78,17 +71,38 @@ export class Token implements IToken {
      * @param secret
      */
     toJwt(secret: string): string {
-        let payload = {
-            sub: this.subject,
+        let payload: any = {
+            sub: this.user.id,
             aud: this.clientId,
             iat: new Date().getTime(),
             exp: moment(moment().add(1, "h")).unix(),
             iss: "https://idp.darb.io",
             token_id: this.id
         };
-        // Assign custom claims
-        Object.assign(payload, this.claims);
+        if (this.type === "id") {
+            Object.assign(payload, {
+                email: this.user.emailAddress,
+                email_verified: this.user.emailVerified,
+
+                name: this.user.name,
+                given_name: this.user.givenName,
+                family_name: this.user.familyName,
+
+                picture:
+                    this.user.pictureUrl ||
+                    `https://www.gravatar.com/avatar/${this.md5(
+                        this.user.emailAddress
+                    )}`
+            });
+        }
 
         return jsonwebtoken.sign(payload, secret);
+    }
+
+    private md5(input: string): string {
+        return crypto
+            .createHash("md5")
+            .update(input)
+            .digest("hex");
     }
 }

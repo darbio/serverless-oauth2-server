@@ -2,6 +2,15 @@ export interface IUser {
     id: string;
     identities: IIdentity[];
 
+    emailAddress: string;
+    emailVerified: boolean;
+
+    name: string;
+    givenName: string;
+    familyName: string;
+
+    pictureUrl?: string;
+
     hasInternalIdentity(): boolean;
     getInternalIdentity(): IInternalIdentity;
 

@@ -9,7 +9,7 @@ import * as validator from "validator";
 import * as moment from "moment";
 import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
 import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
-import { Token } from "../models/Token";
+import { UserToken } from "../models/Token";
 import { ITokenRepository } from "../../core/repositories/ITokenRepository";
 import { TokenRepository } from "../repositories/TokenRepository";
 import { IUserRepository } from "../../core/repositories/IUserRepository";
@@ -127,15 +127,15 @@ export class TokenHandler extends Handler {
 
         // Generate the access_token
         const secret = "SECRET";
-        let access_token = Token.create({
+        let access_token = UserToken.create({
             type: "access",
-            subject: authorizationCode.subject,
-            clientId: authorizationCode.clientId
+            clientId: authorizationCode.clientId,
+            user: user
         });
 
-        let id_token = Token.create({
+        let id_token = UserToken.create({
             type: "id",
-            subject: authorizationCode.subject,
+            user: user,
             clientId: authorizationCode.clientId
         });
 

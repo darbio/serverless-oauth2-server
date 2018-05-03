@@ -1,13 +1,12 @@
-export interface IToken {
-    id: string
-    type: 'access' | 'id'
-    subject: string
-    clientId: string
-    claims: {
-        [key: string]: string;
-     }
-    created: Date
-    expires: Date
+import { IUser } from "./IUser";
 
-    toJwt(secret: string): string
+export interface IUserToken {
+    id: string;
+    type: "access" | "id";
+    clientId: string;
+    user: IUser;
+    created: Date;
+    expires: Date;
+
+    toJwt(secret: string): string;
 }

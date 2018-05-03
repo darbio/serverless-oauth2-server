@@ -94,6 +94,14 @@ export class CallbackHandler extends Handler {
                     provider: {
                         id: provider.id,
                         sub: sub
+                    },
+                    profile: {
+                        name: jwt["name"],
+                        givenName: jwt["given_name"],
+                        familyName: jwt["family_name"],
+                        emailAddress: jwt["email"],
+                        emailVerified: jwt["email_verified"],
+                        pictureUrl: jwt["picture"]
                     }
                 });
                 await userRepository.save(user);

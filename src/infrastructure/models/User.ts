@@ -13,6 +13,39 @@ export class User implements IUser {
     }
     protected _id: string;
 
+    private _emailAddress: string;
+    public get emailAddress(): string {
+        return this._emailAddress;
+    }
+
+    private _emailVerified: boolean;
+    public get emailVerified(): boolean {
+        return this._emailVerified;
+    }
+    public set emailVerified(v: boolean) {
+        this._emailVerified = v;
+    }
+
+    private _name: string;
+    public get name(): string {
+        return this._name;
+    }
+
+    private _givenName: string;
+    public get givenName(): string {
+        return this._givenName;
+    }
+
+    private _familyName: string;
+    public get familyName(): string {
+        return this._familyName;
+    }
+
+    private _pictureUrl?: string;
+    public get pictureUrl(): string | undefined {
+        return this._pictureUrl;
+    }
+
     private _identities: IIdentity[];
     public get identities(): IIdentity[] {
         if (!this._identities) {
@@ -21,14 +54,49 @@ export class User implements IUser {
         return this._identities;
     }
 
+    private static create(params: {
+        username: string;
+        profile: {
+            name: string;
+            givenName: string;
+            familyName: string;
+            emailAddress: string;
+            emailVerified: boolean;
+            pictureUrl?: string;
+        };
+    }): User {
+        let user = new User();
+        user._id = params.username;
+
+        user._emailAddress = params.profile.emailAddress;
+        user._emailVerified = params.profile.emailVerified;
+
+        user._name = params.profile.name;
+        user._familyName = params.profile.familyName;
+        user._givenName = params.profile.givenName;
+
+        user._pictureUrl = params.profile.pictureUrl;
+
+        return user;
+    }
+
     /**
      * Creates a user with a username and password identity
      * @param params
      */
-    static createInternalUser(params: { username: string; password: string }) {
-        let user = new User();
-        user._id = params.username;
-
+    static createInternalUser(params: {
+        username: string;
+        password: string;
+        profile: {
+            name: string;
+            givenName: string;
+            familyName: string;
+            emailAddress: string;
+            emailVerified: boolean;
+            pictureUrl?: string;
+        };
+    }) {
+        let user = User.create(params);
         let identity = InternalIdentity.create({
             sub: params.username,
             password: params.password
@@ -48,11 +116,17 @@ export class User implements IUser {
             id: string;
             sub: string;
         };
+        profile: {
+            name: string;
+            givenName: string;
+            familyName: string;
+            emailAddress: string;
+            emailVerified: boolean;
+            pictureUrl?: string;
+        };
         refreshToken: string;
     }) {
-        let user = new User();
-        user._id = params.username;
-
+        let user = User.create(params);
         let identity = ExternalIdentity.create({
             sub: params.provider.sub,
             provider: params.provider.id,
