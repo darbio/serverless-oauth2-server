@@ -1,14 +1,22 @@
 export interface IUser {
     id: string;
-    claims: { [key: string]: string };
+    identities: IIdentity[];
+
+    hasIdentityFromExternalProvider(params: { provider: string }): boolean;
+    addInternalIdentity(identity: IInternalIdentity);
+    addExternalIdentity(identity: IExternalIdentity);
+}
+
+export interface IIdentity {
+    sub: string;
     type: "internal" | "external";
 }
 
-export interface IExternalUser extends IUser {
-    provider: string;
-    refreshToken: string;
+export interface IInternalIdentity extends IIdentity {
+    login(password: string): boolean;
 }
 
-export interface IInternalUser extends IUser {
-    login(password: string): boolean;
+export interface IExternalIdentity extends IIdentity {
+    provider: string;
+    refreshToken: string;
 }

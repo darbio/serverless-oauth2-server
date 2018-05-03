@@ -136,8 +136,7 @@ export class TokenHandler extends Handler {
         let id_token = Token.create({
             type: "id",
             subject: authorizationCode.subject,
-            clientId: authorizationCode.clientId,
-            claims: user.claims
+            clientId: authorizationCode.clientId
         });
 
         // Save the tokens to the database

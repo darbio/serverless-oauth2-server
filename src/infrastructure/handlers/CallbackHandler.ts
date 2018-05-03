@@ -20,7 +20,7 @@ import { ProviderSessionRepository } from "../repositories/ProviderSessionReposi
 import { IUserRepository } from "../../core/repositories/IUserRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { IUser } from "../../core/models/IUser";
-import { User, ExternalUser } from "../models/User";
+import { User, ExternalIdentity } from "../models/User";
 
 export class CallbackHandler extends Handler {
     async get(
@@ -77,6 +77,7 @@ export class CallbackHandler extends Handler {
             // Get the profile so we can create a user in our system
             let jwt = jsonwebtoken.decode(body.id_token);
             let username = jwt["email"];
+            let sub = jwt["sub"];
 
             if (!username) {
                 throw new Error("Email must be returned");
@@ -85,14 +86,25 @@ export class CallbackHandler extends Handler {
             let userRepository: IUserRepository = new UserRepository();
             let user = await userRepository.get(username);
 
-            // If the user doesn't already exist with this id, create them
             if (!user) {
-                let newUser: IUser = ExternalUser.create({
+                // Create the user
+                let newUser: IUser = User.createExternalUser({
                     username: username,
                     refreshToken: body.refresh_token,
                     provider: provider.id
                 });
                 await userRepository.save(newUser);
+            } else if (
+                // Add this identity provider to the user if it doesn't already exist
+                !user.hasIdentityFromExternalProvider({ provider: provider.id })
+            ) {
+                user.addExternalIdentity(
+                    ExternalIdentity.create({
+                        provider: provider.id,
+                        sub: sub,
+                        refreshToken: body.refresh_token
+                    })
+                );
             }
 
             // Get the original session
