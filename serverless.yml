@@ -3,6 +3,7 @@ service: idp
 provider:
   name: aws
   runtime: nodejs6.10
+  stage: local
   environment:
     DB_ENCRYPTION_KEY: ${file(src/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
 

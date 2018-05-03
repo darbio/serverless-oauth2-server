@@ -7,21 +7,21 @@ import {
 import * as qs from "querystring";
 
 import { SessionRepository } from "./infrastructure/repositories/SessionRepository";
+
 import { AuthorizationCodeRepository } from "./infrastructure/repositories/AuthorizationCodeRepository";
 import { AuthorizationCode } from "./infrastructure/models/AuthorizationCode";
 import { IAuthorizationCodeRepository } from "./core/repositories/IAuthorizationCodeRepository";
-import { Token } from "./infrastructure/models/Token";
-import { ITokenRepository } from "./core/repositories/ITokenRepository";
-import { TokenRepository } from "./infrastructure/repositories/TokenRepository";
+
 import { IUserRepository } from "./core/repositories/IUserRepository";
 import { UserRepository } from "./infrastructure/repositories/UserRepository";
+
 import { IClientRepository } from "./core/repositories/IClientRepository";
 import { ClientRepository } from "./infrastructure/repositories/ClientRepository";
+
 import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
 import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
 import { CallbackHandler } from "./infrastructure/handlers/CallbackHandler";
 import { ProvidersHandler } from "./infrastructure/handlers/ProvidersHandler";
-import { IUser } from "./core/models/IUser";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
