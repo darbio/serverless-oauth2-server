@@ -60,6 +60,10 @@ export class User implements IUser {
         return user;
     }
 
+    /**
+     * Adds an identity with a username and password
+     * @param identity
+     */
     addInternalIdentity(identity: IInternalIdentity) {
         if (!this._identities) {
             this._identities = [];
@@ -67,13 +71,25 @@ export class User implements IUser {
         this._identities.push(identity);
     }
 
+    /**
+     * Adds an identity provided by an external provider
+     * @param identity
+     */
     addExternalIdentity(identity: IExternalIdentity) {
         if (!this._identities) {
             this._identities = [];
         }
+        if (this.identities.filter(a => a.type === "internal").length > 0) {
+            throw new Error("Only one internal identity can exist on a user");
+        }
         this._identities.push(identity);
     }
 
+    /**
+     * Checks if the provider already exists
+     * @param params
+     * @returns true or false
+     */
     hasIdentityFromExternalProvider(params: { provider: string }): boolean {
         return (
             this.identities.filter(a => {
@@ -84,6 +100,30 @@ export class User implements IUser {
                 return false;
             }).length > 0
         );
+    }
+
+    /**
+     * Checks if this user has an internal identity
+     * @returns true or false
+     */
+    hasInternalIdentity(): boolean {
+        return (
+            this.identities.filter(a => {
+                return a.type === "internal";
+            }).length > 0
+        );
+    }
+
+    /**
+     * Gets the internal identity for this user
+     */
+    getInternalIdentity(): InternalIdentity {
+        if (!this.hasInternalIdentity()) {
+            throw new Error("User does not have an internal identity");
+        }
+        return this.identities.filter(a => {
+            return a.type === "internal";
+        })[0] as InternalIdentity;
     }
 }
 

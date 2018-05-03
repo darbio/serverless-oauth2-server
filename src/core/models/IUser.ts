@@ -2,6 +2,9 @@ export interface IUser {
     id: string;
     identities: IIdentity[];
 
+    hasInternalIdentity(): boolean;
+    getInternalIdentity(): IInternalIdentity;
+
     hasIdentityFromExternalProvider(params: { provider: string }): boolean;
     addInternalIdentity(identity: IInternalIdentity);
     addExternalIdentity(identity: IExternalIdentity);

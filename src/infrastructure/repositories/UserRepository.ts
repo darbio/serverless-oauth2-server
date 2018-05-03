@@ -44,8 +44,8 @@ export class UserRepository extends DynamoDbRepository<IUser>
                 identity = typedIdentity;
             }
 
-            identity.sub = item.sub;
-            identity.type = item.type;
+            identity["_sub"] = item.sub;
+            identity["_type"] = item.type;
 
             return identity;
         });

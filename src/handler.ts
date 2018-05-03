@@ -21,7 +21,7 @@ import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
 import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
 import { CallbackHandler } from "./infrastructure/handlers/CallbackHandler";
 import { ProvidersHandler } from "./infrastructure/handlers/ProvidersHandler";
-import { IInternalUser } from "./core/models/IUser";
+import { IUser } from "./core/models/IUser";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -136,13 +136,18 @@ export async function login(
             }
 
             const userRepository: IUserRepository = new UserRepository();
-            const user = (await userRepository.get(username)) as IInternalUser;
+            const user = await userRepository.get(username);
 
             if (!user) {
                 throw new Error("Username invalid");
             }
 
-            if (user.login(password)) {
+            if (!user.hasInternalIdentity()) {
+                throw new Error("Username is not registered locally");
+            }
+
+            let internalIdentity = user.getInternalIdentity();
+            if (internalIdentity.login(password)) {
                 // Login successful
                 if (session.responseType === "token") {
                     throw new Error("Not implemented");
