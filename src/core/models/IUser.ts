@@ -30,5 +30,4 @@ export interface IInternalIdentity extends IIdentity {
 
 export interface IExternalIdentity extends IIdentity {
     provider: string;
-    refreshToken: string;
 }

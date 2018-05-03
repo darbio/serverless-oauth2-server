@@ -93,7 +93,6 @@ export class CallbackHandler extends Handler {
                 // Create the user
                 user = User.createExternalUser({
                     username: username,
-                    refreshToken: body.refresh_token,
                     provider: {
                         id: provider.id,
                         sub: sub
@@ -117,8 +116,7 @@ export class CallbackHandler extends Handler {
                 user.addExternalIdentity(
                     ExternalIdentity.create({
                         provider: provider.id,
-                        sub: sub,
-                        refreshToken: body.refresh_token
+                        sub: sub
                     })
                 );
                 await userRepository.save(user);

@@ -124,13 +124,11 @@ export class User implements IUser {
             emailVerified: boolean;
             pictureUrl?: string;
         };
-        refreshToken: string;
     }) {
         let user = User.create(params);
         let identity = ExternalIdentity.create({
             sub: params.provider.sub,
-            provider: params.provider.id,
-            refreshToken: params.refreshToken
+            provider: params.provider.id
         });
         user.addExternalIdentity(identity);
 
@@ -244,26 +242,16 @@ export class ExternalIdentity extends Identity implements IExternalIdentity {
         return this._provider;
     }
 
-    private _refreshToken: string;
-    public get refreshToken(): string {
-        return this._refreshToken;
-    }
-
     type: "external" = "external";
 
     /**
      * Creates a user from an external provider
      * @param params
      */
-    static create(params: {
-        sub: string;
-        provider: string;
-        refreshToken: string;
-    }): ExternalIdentity {
+    static create(params: { sub: string; provider: string }): ExternalIdentity {
         let identity = new ExternalIdentity();
         identity._sub = params.sub;
         identity._provider = params.provider;
-        identity._refreshToken = params.refreshToken;
         return identity;
     }
 }
