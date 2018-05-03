@@ -4,6 +4,7 @@ import {
     Callback,
     APIGatewayProxyResult
 } from "aws-lambda";
+import * as jsonwebtoken from "jsonwebtoken";
 import * as querystring from "querystring";
 import { Handler } from "../../core/handler";
 import * as request from "request-promise-native";
@@ -16,6 +17,10 @@ import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthoriza
 import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
 import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
 import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
+import { IUserRepository } from "../../core/repositories/IUserRepository";
+import { UserRepository } from "../repositories/UserRepository";
+import { IUser } from "../../core/models/IUser";
+import { User, ExternalUser } from "../models/User";
 
 export class CallbackHandler extends Handler {
     async get(
@@ -62,21 +67,33 @@ export class CallbackHandler extends Handler {
 
             // Parse the request
             let body: {
-                accessToken: string;
-                //refreshToken: string;
+                access_token: string;
+                id_token: string;
+                refresh_token: string;
                 token_type: "bearer";
                 expires: number;
-            } = tokenRequest;
-
-            console.log("Body:");
-            console.log(JSON.stringify(body));
-
-            // Save the refresh token
-            // TODO
+            } = JSON.parse(tokenRequest);
 
             // Get the profile so we can create a user in our system
-            // TODO
-            let username = "username_TEMP";
+            let jwt = jsonwebtoken.decode(body.id_token);
+            let username = jwt["email"];
+
+            if (!username) {
+                throw new Error("Email must be returned");
+            }
+
+            let userRepository: IUserRepository = new UserRepository();
+            let user = userRepository.get(username);
+
+            // If the user doesn't already exist with this id, create them
+            if (!user) {
+                let newUser: IUser = ExternalUser.create({
+                    username: username,
+                    refreshToken: "",
+                    provider: provider.id
+                });
+                await userRepository.save(newUser);
+            }
 
             // Get the original session
             let sessionRepository: ISessionRepository = new SessionRepository();

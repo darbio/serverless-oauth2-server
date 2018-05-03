@@ -21,6 +21,7 @@ import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
 import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
 import { CallbackHandler } from "./infrastructure/handlers/CallbackHandler";
 import { ProvidersHandler } from "./infrastructure/handlers/ProvidersHandler";
+import { IInternalUser } from "./core/models/IUser";
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID
@@ -48,6 +49,7 @@ export async function authorize(
     context: Context,
     callback: Callback<APIGatewayProxyResult>
 ) {
+    console.log("authorize");
     let handler = new AuthorizeHandler();
     await handler.get(event, context, callback);
 }
@@ -63,6 +65,7 @@ export async function callback(
     context: Context,
     callback: Callback<APIGatewayProxyResult>
 ) {
+    console.log("callback");
     let handler = new CallbackHandler();
     await handler.get(event, context, callback);
 }
@@ -78,6 +81,7 @@ export async function providers(
     context: Context,
     callback: Callback<APIGatewayProxyResult>
 ) {
+    console.log("providers");
     let handler = new ProvidersHandler();
     await handler.get(event, context, callback);
 }
@@ -132,7 +136,7 @@ export async function login(
             }
 
             const userRepository: IUserRepository = new UserRepository();
-            const user = await userRepository.get(username);
+            const user = (await userRepository.get(username)) as IInternalUser;
 
             if (!user) {
                 throw new Error("Username invalid");

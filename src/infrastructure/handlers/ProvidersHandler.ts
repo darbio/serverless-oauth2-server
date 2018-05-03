@@ -5,6 +5,7 @@ import {
     APIGatewayProxyResult
 } from "aws-lambda";
 import * as uuid from "uuid/v4";
+import * as querystring from "querystring";
 import { Handler } from "../../core/handler";
 import { IProviderRepository } from "../../core/repositories/IProviderRepository";
 import { ProviderRepository } from "../repositories/ProviderRepository";
@@ -46,11 +47,19 @@ export class ProvidersHandler extends Handler {
             await providerSessionRepository.save(providerSession);
 
             // Authorization code
-            let codeUrl = `${
-                provider.authorizationUrl
-            }?response_type=code&client_id=${provider.clientId}&redirect_uri=${
-                provider.callbackUrl
-            }&scope=${provider.scope.join("+")}&state=${providerSession.id}`;
+            let params = {
+                scope: provider.scope.join(" "),
+                access_type: "offline",
+                state: providerSession.id,
+                redirect_uri: provider.callbackUrl,
+                response_type: "code",
+                client_id: provider.clientId
+            };
+
+            let codeUrl = `${provider.authorizationUrl}?${querystring.stringify(
+                params
+            )}`;
+            console.log(codeUrl);
 
             // Redirect user to provider
             return this.Redirect(callback, codeUrl);

@@ -1,19 +1,54 @@
-import { IUser } from "../../core/models/IUser";
+import { IUser, IExternalUser, IInternalUser } from "../../core/models/IUser";
 import * as bcrypt from "bcrypt";
 import * as uuid from "uuid/v4";
 
-export class User implements IUser {
+export abstract class User implements IUser {
     get id(): string {
         return this._id;
     }
-    private _id: string;
+    protected _id: string;
 
     get claims(): { [key: string]: string } {
         return this._claims;
     }
-    private _claims: { [key: string]: string };
+    protected _claims: { [key: string]: string };
 
+    abstract type: "internal" | "external";
+}
+
+export class ExternalUser extends User implements IExternalUser {
+    private _provider: string;
+    public get provider(): string {
+        return this._provider;
+    }
+
+    private _refreshToken: string;
+    public get refreshToken(): string {
+        return this._refreshToken;
+    }
+
+    type: "external";
+
+    /**
+     * Creates a user from an external provider
+     * @param params
+     */
+    static create(params: {
+        username: string;
+        provider: string;
+        refreshToken: string;
+    }): User {
+        let user = new ExternalUser();
+        user._id = params.username;
+        user._provider = params.provider;
+        user._refreshToken = params.refreshToken;
+        return user;
+    }
+}
+
+export class InternalUser extends User implements IInternalUser {
     private _passwordHash: string;
+    type: "internal";
 
     /**
      * Compares a password to the stored hash
@@ -31,8 +66,8 @@ export class User implements IUser {
         username: string;
         password: string;
         claims?: { [key: string]: string };
-    }): User {
-        let user = new User();
+    }): InternalUser {
+        let user = new InternalUser();
         user._id = params.username; // TODO MD5 hash the username
         user._passwordHash = bcrypt.hashSync(params.password, 10);
         return user;
