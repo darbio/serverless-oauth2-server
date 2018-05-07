@@ -8,7 +8,7 @@ Use `npm start` to spin up a local instance of serverless running the identity p
 
 ## Deploying to AWS
 
-Use `sls deploy --stage dev --profile darb.io` to deploy to aws.
+Use `sls deploy --stage dev --aws-profile darb.io` to deploy to aws.
 
 ## Model
 

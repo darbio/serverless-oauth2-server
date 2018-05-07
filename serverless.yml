@@ -128,7 +128,7 @@ resources:
       Type: 'AWS::DynamoDB::Table'
       DeletionPolicy: Retain
       Properties:
-        TableName: ${self:custom.dynamo_codesTable}
+        TableName: ${self:custom.dynamo_providerSessionsTable}
         TimeToLiveSpecification:
           AttributeName: expires
           Enabled: true
