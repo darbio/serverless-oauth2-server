@@ -16,7 +16,7 @@
     "homepage": "https://bitbucket.org/darbio/idp#readme",
     "devDependencies": {
         "@types/aws-lambda": "^8.10.3",
-        "@types/bcrypt": "^1.0.0",
+        "@types/bcryptjs": "^2.4.1",
         "@types/jsonwebtoken": "^7.2.6",
         "@types/moment": "^2.13.0",
         "@types/mustache": "^0.8.30",
@@ -31,7 +31,7 @@
     },
     "dependencies": {
         "aws-sdk": "^2.229.1",
-        "bcrypt": "^2.0.1",
+        "bcryptjs": "^2.4.3",
         "jsonwebtoken": "^8.2.1",
         "moment": "^2.22.1",
         "mustache": "^2.3.0",

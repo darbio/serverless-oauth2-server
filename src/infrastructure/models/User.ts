@@ -4,7 +4,7 @@ import {
     IInternalIdentity,
     IExternalIdentity
 } from "../../core/models/IUser";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import * as uuid from "uuid/v4";
 
 export class User implements IUser {
