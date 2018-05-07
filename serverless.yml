@@ -49,6 +49,195 @@ functions:
           path: login
           method: get
           
+resources:
+  Resources:
+    ClientsTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_clientsTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: jwtSecret
+            AttributeType: S
+          - AttributeName: grantType
+            AttributeType: S
+          - AttributeName: redirectUris
+            AttributeType: L
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    ProvidersTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_providersTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: clientSecret
+            AttributeType: S
+          - AttributeName: clientId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    UsersTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_usersTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: emailAddress
+            AttributeType: S
+          - AttributeName: emailVerified
+            AttributeType: B
+          - AttributeName: identities
+            AttributeType: M
+          - AttributeName: givenName
+            AttributeType: S
+          - AttributeName: familyName
+            AttributeType: S
+          - AttributeName: name
+            AttributeType: S
+          - AttributeName: pictureUrl
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    CodesTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_codesTable}
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: redirectUri
+            AttributeType: S
+          - AttributeName: clientId
+            AttributeType: S
+          - AttributeName: subject
+            AttributeType: S
+          - AttributeName: created
+            AttributeType: N
+          - AttributeName: expires
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    ProviderSessionsTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_codesTable}
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: provider
+            AttributeType: S
+          - AttributeName: created
+            AttributeType: N
+          - AttributeName: expires
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    SessionsTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_sessionsTable}
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: redirectUri
+            AttributeType: S
+          - AttributeName: responseType
+            AttributeType: S
+          - AttributeName: clientId
+            AttributeType: S
+          - AttributeName: state
+            AttributeType: S
+          - AttributeName: created
+            AttributeType: N
+          - AttributeName: expires
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+    TokensTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        TableName: ${self:custom.dynamo_tokensTable}
+        TimeToLiveSpecification:
+          AttributeName: expires
+          Enabled: true
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: type
+            AttributeType: S
+          - AttributeName: clientId
+            AttributeType: S
+          - AttributeName: subject
+            AttributeType: S
+          - AttributeName: created
+            AttributeType: N
+          - AttributeName: expires
+            AttributeType: N
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+custom:
+  dynamo_clientsTable: "clients_${opt:stage}_${self:service}"
+  dynamo_codesTable: "codes_${opt:stage}_${self:service}"
+  dynamo_providerSessionsTable: "providerSessions_${opt:stage}_${self:service}"
+  dynamo_providersTable: "providers_${opt:stage}_${self:service}"
+  dynamo_sessionsTable: "sessions_${opt:stage}_${self:service}"
+  dynamo_tokensTable: "tokens_${opt:stage}_${self:service}"
+
 plugins:
   - serverless-webpack
   - serverless-offline
