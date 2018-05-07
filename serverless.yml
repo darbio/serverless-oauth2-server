@@ -240,13 +240,13 @@ resources:
           WriteCapacityUnits: 1
 
 custom:
-  dynamo_clientsTable: "clients_${opt:stage}_${self:service}"
-  dynamo_codesTable: "codes_${opt:stage}_${self:service}"
-  dynamo_providerSessionsTable: "providerSessions_${opt:stage}_${self:service}"
-  dynamo_providersTable: "providers_${opt:stage}_${self:service}"
-  dynamo_sessionsTable: "sessions_${opt:stage}_${self:service}"
-  dynamo_tokensTable: "tokens_${opt:stage}_${self:service}"
-  dynamo_usersTable: "users_${opt:stage}_${self:service}"
+  dynamo_clientsTable: "${self:service}_clients_${opt:stage}"
+  dynamo_codesTable: "${self:service}_codes_${opt:stage}"
+  dynamo_providerSessionsTable: "${self:service}_providerSessions_${opt:stage}"
+  dynamo_providersTable: "${self:service}_providers_${opt:stage}"
+  dynamo_sessionsTable: "${self:service}_sessions_${opt:stage}"
+  dynamo_tokensTable: "${self:service}_tokens_${opt:stage}"
+  dynamo_usersTable: "${self:service}_users_${opt:stage}"
 
 plugins:
   - serverless-webpack
