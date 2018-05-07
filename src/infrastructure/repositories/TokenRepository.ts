@@ -23,13 +23,13 @@ export class TokenRepository extends DynamoDbRepository<IUserToken>
     }
 
     toDataObject(businessObject: IUserToken): ITokenDataObject {
-        return <ITokenDataObject>{
+        return {
             id: businessObject.id,
             subject: businessObject.user.id,
             type: businessObject.type,
             clientId: businessObject.clientId,
-            created: businessObject.created.getTime(),
-            expires: businessObject.expires.getTime()
+            created: businessObject.created.getTime() / 1000,
+            expires: businessObject.expires.getTime() / 1000
         };
     }
 }

@@ -27,8 +27,8 @@ export class AuthorizationCodeRepository
         domainObject["_clientId"] = dataObject.clientId;
         domainObject["_redirectUri"] = dataObject.redirectUri;
         domainObject["_subject"] = dataObject.subject;
-        domainObject["_created"] = new Date(dataObject.created);
-        domainObject["_expires"] = new Date(dataObject.expires);
+        domainObject["_created"] = new Date(dataObject.created * 1000);
+        domainObject["_expires"] = new Date(dataObject.expires * 1000);
 
         return domainObject;
     }
@@ -36,13 +36,13 @@ export class AuthorizationCodeRepository
     toDataObject(
         businessObject: AuthorizationCode
     ): IAuthorizationCodeDataObject {
-        return <IAuthorizationCodeDataObject>{
+        return {
             id: businessObject.id,
             clientId: businessObject.clientId,
             redirectUri: businessObject.redirectUri,
             subject: businessObject.subject,
-            created: businessObject.created.getTime(),
-            expires: businessObject.expires.getTime()
+            created: businessObject.created.getTime() / 1000,
+            expires: businessObject.expires.getTime() / 1000
         };
     }
 }

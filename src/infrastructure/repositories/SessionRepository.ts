@@ -26,21 +26,21 @@ export class SessionRepository extends DynamoDbRepository<Session>
         session["_responseType"] = dataObject.responseType;
         session["_redirectUri"] = dataObject.redirectUri;
         session["_state"] = dataObject.state;
-        session["_created"] = new Date(dataObject.created);
-        session["_expires"] = new Date(dataObject.expires);
+        session["_created"] = new Date(dataObject.created * 1000);
+        session["_expires"] = new Date(dataObject.expires * 1000);
 
         return session;
     }
 
     toDataObject(businessObject: Session): ISessionDataObject {
-        return <ISessionDataObject>{
+        return {
             id: businessObject.id,
             clientId: businessObject.clientId,
             responseType: businessObject.responseType,
             redirectUri: businessObject.redirectUri,
             state: businessObject.state,
-            created: businessObject.created.getTime(),
-            expires: businessObject.expires.getTime()
+            created: businessObject.created.getTime() / 1000,
+            expires: businessObject.expires.getTime() / 1000
         };
     }
 }

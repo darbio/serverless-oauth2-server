@@ -70,7 +70,7 @@ export class UserRepository extends DynamoDbRepository<IUser>
     }
 
     toDataObject(businessObject: IUser): IUserDataObject {
-        let dataObject: IUserDataObject = <IUserDataObject>{
+        let dataObject: IUserDataObject = {
             id: businessObject.id,
             identities: businessObject.identities.map(
                 (item): IUserIdentityDataObject => {

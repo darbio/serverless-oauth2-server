@@ -18,11 +18,12 @@ export class ProviderSessionRepository
     }
 
     toDataObject(domainObject: ProviderSession): IProviderSessionDataObject {
-        return <IProviderSessionDataObject>{
+        return {
             id: domainObject.id,
             provider: domainObject.provider,
             sessionId: domainObject.sessionId,
-            expires: domainObject.expires.getTime()
+            expires: domainObject.expires.getTime() / 1000,
+            created: domainObject.created.getTime() / 1000
         };
     }
 
@@ -32,8 +33,8 @@ export class ProviderSessionRepository
         domainObject["_id"] = dataObject.id;
         domainObject["_provider"] = dataObject.provider;
         domainObject["_sessionId"] = dataObject.sessionId;
-        domainObject["_created"] = new Date(dataObject.created);
-        domainObject["_expires"] = new Date(dataObject.expires);
+        domainObject["_created"] = new Date(dataObject.created * 1000);
+        domainObject["_expires"] = new Date(dataObject.expires * 1000);
 
         return domainObject;
     }

@@ -17,7 +17,7 @@ export class ClientRepository extends DynamoDbRepository<Client>
     }
 
     toDataObject(domainObject: Client): IClientDataObject {
-        return <IClientDataObject>{
+        return {
             id: domainObject.id,
             secret: domainObject.secret,
             jwtSecret: domainObject.jwtSecret,
