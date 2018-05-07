@@ -1,5 +1,4 @@
 service: idp
-
 provider:
   name: aws
   runtime: nodejs6.10
@@ -16,7 +15,7 @@ provider:
     SESSIONS_TABLE_NAME: ${self:custom.dynamo_sessionsTable}
     TOKENS_TABLE_NAME: ${self:custom.dynamo_tokensTable}
     USERS_TABLE_NAME: ${self:custom.dynamo_usersTable}
-    
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -203,6 +202,10 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
+
+package:
+  include:
+    - src/templates/login/template.html
 
 custom:
   dynamo_clientsTable: "${self:service}_clients_${opt:stage}"
