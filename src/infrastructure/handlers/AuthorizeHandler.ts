@@ -4,6 +4,7 @@ import {
     Callback,
     APIGatewayProxyResult
 } from "aws-lambda";
+import * as url from "url";
 import * as querystring from "querystring";
 import { SessionRepository } from "../repositories/SessionRepository";
 import { Session } from "../models/Session";
@@ -67,7 +68,10 @@ export class AuthorizeHandler extends Handler {
             const sessionRepository = new SessionRepository();
             await sessionRepository.save(session);
 
-            return this.Redirect(callback, session.getLoginUrl());
+            return this.Redirect(
+                callback,
+                url.resolve(process.env.BASE_URL, session.getLoginUrl())
+            );
         } catch (err) {
             return this.Error(callback, {
                 error: "server_error",

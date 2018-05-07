@@ -24,6 +24,7 @@ import { IUserRepository } from "../../core/repositories/IUserRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { IUser } from "../../core/models/IUser";
 import { User, ExternalIdentity } from "../models/User";
+import * as url from "url";
 
 export class LoginHandler extends Handler {
     async get(
@@ -218,24 +219,20 @@ export class LoginHandler extends Handler {
                     authorizationCodeRepository.save(code);
 
                     // Send them back to the auth server with a authorization code
-                    const url = `${session.redirectUri}?code=${code.id}&state=${
-                        session.state
-                    }`;
-                    return callback(null, {
-                        statusCode: 302,
-                        headers: {
-                            Location: url
-                        },
-                        body: null
-                    });
+                    return this.Redirect(
+                        callback,
+                        url.resolve(
+                            process.env.BASE_URL,
+                            `${session.redirectUri}?code=${code.id}&state=${
+                                session.state
+                            }`
+                        )
+                    );
                 }
             } else {
                 // Login failed
-                return callback(null, {
-                    statusCode: 401,
-                    body: JSON.stringify({
-                        message: "Invalid credentials"
-                    })
+                return this.Unauthorized(callback, {
+                    message: "Invalid credentials"
                 });
             }
         } catch (err) {

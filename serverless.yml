@@ -6,6 +6,7 @@ provider:
   region: us-east-1
   environment:
     # Other
+    BASE_URL: { "Fn::Join" : ["", [" https://", { "Ref" : "ApiGatewayRestApi" }, ".execute-api.${self:custom.region}.amazonaws.com/${self:custom.stage}/" ] ]  }
     DB_ENCRYPTION_KEY: ${file(src/config/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
     # Tables
     CLIENTS_TABLE_NAME: ${self:custom.dynamo_clientsTable}

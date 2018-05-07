@@ -15,6 +15,7 @@ import { Session } from "../models/Session";
 import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
 import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
 import { ProviderSession } from "../models/ProviderSession";
+import * as url from "url";
 
 export class ProvidersHandler extends Handler {
     /**
@@ -62,12 +63,16 @@ export class ProvidersHandler extends Handler {
                 client_id: provider.clientId
             };
 
-            let codeUrl = `${provider.authorizationUrl}?${querystring.stringify(
-                params
-            )}`;
-
             // Redirect user to provider
-            return this.Redirect(callback, codeUrl);
+            return this.Redirect(
+                callback,
+                url.resolve(
+                    process.env.BASE_URL,
+                    `${provider.authorizationUrl}?${querystring.stringify(
+                        params
+                    )}`
+                )
+            );
         } catch (err) {
             console.error(err);
             this.Error(callback, {
