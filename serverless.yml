@@ -246,6 +246,7 @@ custom:
   dynamo_providersTable: "providers_${opt:stage}_${self:service}"
   dynamo_sessionsTable: "sessions_${opt:stage}_${self:service}"
   dynamo_tokensTable: "tokens_${opt:stage}_${self:service}"
+  dynamo_usersTable: "users_${opt:stage}_${self:service}"
 
 plugins:
   - serverless-webpack
