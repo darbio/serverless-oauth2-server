@@ -6,6 +6,10 @@ An OAuth2 ID Provider using serverless, running on AWS lambda with a dynamodb ba
 
 Use `npm start` to spin up a local instance of serverless running the identity provider.
 
+## Deploying to AWS
+
+Use `sls deploy --stage dev --profile darb.io` to deploy to aws.
+
 ## Model
 
 ### Clients
