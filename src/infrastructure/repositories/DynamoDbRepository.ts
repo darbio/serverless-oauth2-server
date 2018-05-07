@@ -5,10 +5,14 @@ export abstract class DynamoDbRepository<T> {
     protected client: aws.DynamoDB.DocumentClient;
 
     constructor(protected tableName: string) {
-        this.client = new aws.DynamoDB.DocumentClient({
-            endpoint: "http://localhost:4569",
-            region: "ap-southeast-2"
-        });
+        let dynamoOptions = undefined;
+        if (!!process.env.IS_OFFLINE) {
+            dynamoOptions = {
+                endpoint: "http://localhost:4569",
+                region: "ap-southeast-2"
+            };
+        }
+        this.client = new aws.DynamoDB.DocumentClient(dynamoOptions);
     }
 
     abstract toDomainObject(dataObject: any): T;

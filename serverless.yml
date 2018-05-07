@@ -5,7 +5,16 @@ provider:
   runtime: nodejs6.10
   stage: local
   environment:
+    # Other
     DB_ENCRYPTION_KEY: ${file(src/config/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
+    # Tables
+    CLIENTS_TABLE_NAME: ${self:custom.dynamo_clientsTable}
+    CODES_TABLE_NAME: ${self:custom.dynamo_codesTable}
+    PROVIDER_SESSIONS_TABLE_NAME: ${self:custom.dynamo_providerSessionsTable}
+    PROVIDERS_TABLE_NAME: ${self:custom.dynamo_providersTable}
+    SESSIONS_TABLE_NAME: ${self:custom.dynamo_sessionsTable}
+    TOKENS_TABLE_NAME: ${self:custom.dynamo_tokensTable}
+    USERS_TABLE_NAME: ${self:custom.dynamo_usersTable}
 
 functions:
   token:

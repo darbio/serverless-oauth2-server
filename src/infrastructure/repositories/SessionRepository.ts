@@ -15,7 +15,7 @@ interface ISessionDataObject {
 export class SessionRepository extends DynamoDbRepository<Session>
     implements ISessionRepository {
     constructor() {
-        super("authorization_sessions");
+        super(process.env.SESSIONS_TABLE_NAME);
     }
 
     toDomainObject(dataObject: ISessionDataObject): Session {

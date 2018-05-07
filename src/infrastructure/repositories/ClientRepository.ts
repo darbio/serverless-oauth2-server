@@ -13,7 +13,7 @@ interface IClientDataObject {
 export class ClientRepository extends DynamoDbRepository<Client>
     implements IClientRepository {
     constructor() {
-        super("authorization_clients");
+        super(process.env.CLIENTS_TABLE_NAME);
     }
 
     toDataObject(domainObject: Client): IClientDataObject {

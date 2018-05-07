@@ -33,7 +33,7 @@ interface IUserIdentityDataObject {
 export class UserRepository extends DynamoDbRepository<IUser>
     implements IUserRepository {
     constructor() {
-        super("authorization_users");
+        super(process.env.USERS_TABLE_NAME);
     }
 
     toDomainObject(dataObject: IUserDataObject): User {

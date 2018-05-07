@@ -16,7 +16,7 @@ export class AuthorizationCodeRepository
     extends DynamoDbRepository<AuthorizationCode>
     implements IAuthorizationCodeRepository {
     constructor() {
-        super("authorization_codes");
+        super(process.env.CODES_TABLE_NAME);
     }
 
     toDomainObject(

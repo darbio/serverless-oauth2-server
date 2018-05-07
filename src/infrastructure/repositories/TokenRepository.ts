@@ -15,7 +15,7 @@ interface ITokenDataObject {
 export class TokenRepository extends DynamoDbRepository<IUserToken>
     implements ITokenRepository {
     constructor() {
-        super("authorization_tokens");
+        super(process.env.TOKENS_TABLE_NAME);
     }
 
     toDomainObject(dataObject: ITokenDataObject): IUserToken {

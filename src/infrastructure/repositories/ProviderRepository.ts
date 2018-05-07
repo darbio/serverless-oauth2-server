@@ -1,24 +1,25 @@
-import {DynamoDbRepository} from "./DynamoDbRepository";
-import {IProviderRepository} from "../../core/repositories/IProviderRepository";
-import {Provider} from "../models/Provider";
+import { DynamoDbRepository } from "./DynamoDbRepository";
+import { IProviderRepository } from "../../core/repositories/IProviderRepository";
+import { Provider } from "../models/Provider";
 
 interface IProviderDataObject {
-    id : string;
-    clientId : string;
-    clientSecret : string;
-    authorizationUrl : string;
-    tokenUrl : string;
-    callbackUrl : string;
-    profileUrl : string;
-    scope : string[];
+    id: string;
+    clientId: string;
+    clientSecret: string;
+    authorizationUrl: string;
+    tokenUrl: string;
+    callbackUrl: string;
+    profileUrl: string;
+    scope: string[];
 }
 
-export class ProviderRepository extends DynamoDbRepository < Provider > implements IProviderRepository {
+export class ProviderRepository extends DynamoDbRepository<Provider>
+    implements IProviderRepository {
     constructor() {
-        super("authorization_providers");
+        super(process.env.PROVIDERS_TABLE_NAME);
     }
 
-    toDataObject(domainObject : Provider) : IProviderDataObject {
+    toDataObject(domainObject: Provider): IProviderDataObject {
         return {
             id: domainObject.id,
             clientId: domainObject.clientId,
@@ -31,7 +32,7 @@ export class ProviderRepository extends DynamoDbRepository < Provider > implemen
         };
     }
 
-    toDomainObject(dataObject : IProviderDataObject) : Provider {
+    toDomainObject(dataObject: IProviderDataObject): Provider {
         let provider = new Provider();
 
         provider["_id"] = dataObject.id;

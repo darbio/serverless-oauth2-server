@@ -14,7 +14,7 @@ export class ProviderSessionRepository
     extends DynamoDbRepository<ProviderSession>
     implements IProviderSessionRepository {
     constructor() {
-        super("authorization_providerSessions");
+        super(process.env.PROVIDER_SESSIONS_TABLE_NAME);
     }
 
     toDataObject(domainObject: ProviderSession): IProviderSessionDataObject {
