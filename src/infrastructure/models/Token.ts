@@ -77,7 +77,7 @@ export class UserToken implements IUserToken {
             iat: moment(new Date()).unix(),
             exp: moment(moment().add(1, "h")).unix(),
             iss: "https://idp.darb.io",
-            token_id: this.id
+            jti: this.id
         };
         if (this.type === "id") {
             Object.assign(payload, {
