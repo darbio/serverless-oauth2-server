@@ -1,5 +1,4 @@
 import * as uuid from "uuid/v4";
-import * as bcrypt from "bcrypt";
 import * as moment from "moment";
 import { AuthorizationCode } from "./AuthorizationCode";
 import { ISession } from "../../core/models/ISession";
