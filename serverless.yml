@@ -16,6 +16,32 @@ provider:
     SESSIONS_TABLE_NAME: ${self:custom.dynamo_sessionsTable}
     TOKENS_TABLE_NAME: ${self:custom.dynamo_tokensTable}
     USERS_TABLE_NAME: ${self:custom.dynamo_usersTable}
+    
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - SNS:Publish
+        - SNS:CreateTopic
+      Resource: { "Fn::Join" : ["", ["arn:aws:sns:${opt:region, self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":${self:service}_*_${opt:stage}" ] ]  }
+
+    - Effect: "Allow"
+      Action:
+        - ses:SendEmail
+        - ses:SendRawEmail
+        - sns:Publish
+      Resource: "*"
+
+    # Allow access to all Dynamo DB tables in this region that begin with the service name and end with the stage
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: { "Fn::Join" : ["", ["arn:aws:dynamodb:${opt:region, self:provider.region}:", { "Ref" : "AWS::AccountId" }, ":table/${self:service}_*_${opt:stage}" ] ]  }
+
 
 functions:
   token:
