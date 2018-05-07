@@ -4,6 +4,7 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: local
+  region: us-east-1
   environment:
     # Other
     DB_ENCRYPTION_KEY: ${file(src/config/config.${self:provider.stage}.json):DB_ENCRYPTION_KEY}
@@ -68,12 +69,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: jwtSecret
-            AttributeType: S
-          - AttributeName: grantType
-            AttributeType: S
-          - AttributeName: redirectUris
-            AttributeType: L
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -89,10 +84,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: clientSecret
-            AttributeType: S
-          - AttributeName: clientId
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -107,20 +98,6 @@ resources:
         TableName: ${self:custom.dynamo_usersTable}
         AttributeDefinitions:
           - AttributeName: id
-            AttributeType: S
-          - AttributeName: emailAddress
-            AttributeType: S
-          - AttributeName: emailVerified
-            AttributeType: B
-          - AttributeName: identities
-            AttributeType: M
-          - AttributeName: givenName
-            AttributeType: S
-          - AttributeName: familyName
-            AttributeType: S
-          - AttributeName: name
-            AttributeType: S
-          - AttributeName: pictureUrl
             AttributeType: S
         KeySchema:
           - AttributeName: id
@@ -140,16 +117,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: redirectUri
-            AttributeType: S
-          - AttributeName: clientId
-            AttributeType: S
-          - AttributeName: subject
-            AttributeType: S
-          - AttributeName: created
-            AttributeType: N
-          - AttributeName: expires
-            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -168,12 +135,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: provider
-            AttributeType: S
-          - AttributeName: created
-            AttributeType: N
-          - AttributeName: expires
-            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -192,18 +153,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: redirectUri
-            AttributeType: S
-          - AttributeName: responseType
-            AttributeType: S
-          - AttributeName: clientId
-            AttributeType: S
-          - AttributeName: state
-            AttributeType: S
-          - AttributeName: created
-            AttributeType: N
-          - AttributeName: expires
-            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -222,16 +171,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: type
-            AttributeType: S
-          - AttributeName: clientId
-            AttributeType: S
-          - AttributeName: subject
-            AttributeType: S
-          - AttributeName: created
-            AttributeType: N
-          - AttributeName: expires
-            AttributeType: N
         KeySchema:
           - AttributeName: id
             KeyType: HASH
