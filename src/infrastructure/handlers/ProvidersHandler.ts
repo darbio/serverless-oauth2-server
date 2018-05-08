@@ -66,12 +66,7 @@ export class ProvidersHandler extends Handler {
             // Redirect user to provider
             return this.Redirect(
                 callback,
-                url(
-                    process.env.BASE_URL,
-                    `${provider.authorizationUrl}?${querystring.stringify(
-                        params
-                    )}`
-                )
+                `${provider.authorizationUrl}?${querystring.stringify(params)}`
             );
         } catch (err) {
             console.error(err);
