@@ -51,6 +51,10 @@ This project uses dynamodb to store the users, clients and providers in the tabl
 `grantType` is the type of grant allowed to be used by this client.
 `redirectUris` are the allowed redirect URLs for this client.
 
+#### Supported providers
+
+*   [Google](https://console.developers.google.com/apis/credentials)
+
 ### Providers
 
 Providers are what provides the user to the server. E.g. local users, google etc.
