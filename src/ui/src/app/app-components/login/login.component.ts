@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-
 import * as url from "url-join";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 
 @Component({
   selector: "app-login",
@@ -33,11 +33,25 @@ export class LoginComponent implements OnInit {
   session: string;
   serverUrl = "http://localhost:3000/";
 
-  constructor(private route: ActivatedRoute) {}
+  loginForm: FormGroup;
+
+  constructor(
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.session = params["session"];
+    });
+
+    this.createForm();
+  }
+
+  private createForm() {
+    this.loginForm = this.formBuilder.group({
+      email_address: ["", [Validators.email, Validators.required]],
+      password: ["", Validators.required]
     });
   }
 
@@ -50,5 +64,9 @@ export class LoginComponent implements OnInit {
     );
   }
 
-  login() {}
+  login() {
+    if (this.loginForm.dirty && this.loginForm.valid) {
+      alert("login");
+    }
+  }
 }

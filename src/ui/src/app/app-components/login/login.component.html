@@ -1,20 +1,20 @@
 <div class="body text-center" *ngIf="session">
-  <form class="form-signin" action="{{baseUrl}}login?session={{sessionId}}" method="post">
+  <form class="form-signin" [formGroup]="loginForm" (submit)="login()">
     <img class="mb-4" src="https://avatars1.githubusercontent.com/u/517620?s=460&v=4" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <div *ngFor="let alert of alerts">
       <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout">{{ alert.msg }}</alert>
     </div>
     <label for="username" class="sr-only">Email address</label>
-    <input type="email" id="username" name="username" class="form-control" placeholder="Email address" required autofocus>
+    <input type="email" formControlName="email_address" class="form-control" placeholder="Email address" required autofocus>
     <label for="password" class="sr-only">Password</label>
-    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+    <input type="password" formControlName="password" class="form-control" placeholder="Password" required>
     <!-- <div class="checkbox mb-3">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div> -->
-    <button class="mt-3 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button [disabled]="!loginForm.valid" class="mt-3 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <p class="mb-5">
       <a [routerLink]="['/', 'forgotten']">Don't remember your password?</a>
     </p>
@@ -23,5 +23,4 @@
     </a>
     <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
   </form>
-
 </div>
