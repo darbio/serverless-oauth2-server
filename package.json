@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "sls offline --stage local"
+        "start": "sls offline --stage local",
+        "deploy:dev": "sls deploy --stage dev --aws-profile darb.io"
     },
     "repository": {
         "type": "git",
