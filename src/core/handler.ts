@@ -6,11 +6,13 @@ export abstract class Handler {
         body?: any,
         headers?: { [header: string]: string | number | boolean }
     ): void {
-        callback(null, {
+        const response = {
             statusCode: 200,
             headers: headers ? headers : null,
             body: body ? JSON.stringify(body) : null
-        });
+        };
+        console.log(response);
+        callback(null, response);
     }
 
     Redirect(
@@ -36,11 +38,13 @@ export abstract class Handler {
         body?: any,
         headers?: { [header: string]: string | number | boolean }
     ) {
-        callback(null, {
+        const response = {
             statusCode: 302,
             headers: headers ? headers : null,
             body: body ? JSON.stringify(body) : null
-        });
+        };
+        console.log(JSON.stringify(response));
+        callback(null, response);
     }
 
     Unauthorized(
@@ -48,11 +52,13 @@ export abstract class Handler {
         body?: any,
         headers?: { [header: string]: string | number | boolean }
     ) {
-        callback(null, {
+        const response = {
             statusCode: 401,
             headers: headers ? headers : null,
             body: body ? JSON.stringify(body) : null
-        });
+        };
+        console.log(response);
+        callback(null, response);
     }
 
     BadRequest(
@@ -60,10 +66,12 @@ export abstract class Handler {
         body?: any,
         headers?: { [header: string]: string | number | boolean }
     ) {
-        callback(null, {
+        const response = {
             statusCode: 400,
             headers: headers ? headers : null,
             body: body ? JSON.stringify(body) : null
-        });
+        };
+        console.log(response);
+        callback(null, response);
     }
 }
