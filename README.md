@@ -8,6 +8,13 @@ Use `npm start` to spin up a local instance of serverless running the identity p
 
 ## Deploying to AWS
 
+Vanity scripts:
+
+*   `npm run deploy:dev`
+*   `npm run deploy:prod`
+
+Under the covers:
+
 Use `sls deploy --stage dev --aws-profile darb.io` to deploy to aws.
 
 ## Model
@@ -26,7 +33,7 @@ Use `sls deploy --stage dev --aws-profile darb.io` to deploy to aws.
 ```
 
 `id` is a unique string identifier for the client (e.g. guid).
-`jwtSecret` is used to sign the JWTs and can be shared with the client to verify JWTs.
+`jwtSecret` is used to sign the JWTs and can be shared with the client to verify JWTs. This can be anything but it is recommended that it is a 256-bit key.
 `grantType` is the type of grant allowed to be used by this client.
 `redirectUris` are the allowed redirect URLs for this client.
 
