@@ -11,10 +11,10 @@
         <input type="checkbox" value="remember-me"> Remember me
       </label>
     </div> -->
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+    <button class="mt-3 btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <a [routerLink]="['/', 'forgotten']">Don't remember your password?</a>
     <a href="{{baseUrl}}providers/google?session={{sessionId}}" class="mt-5 btn btn-outline-dark btn-block">
-      <i class="fab fa-google float-left mt-1"></i> Sign in using Google
+      <fa-icon [icon]="['fab', 'google']" class="float-left"></fa-icon> Sign in using Google
     </a>
     <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
   </form>
