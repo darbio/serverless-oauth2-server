@@ -1,30 +1,13 @@
-import {
-    APIGatewayProxyEvent,
-    Context,
-    Callback,
-    APIGatewayProxyResult
-} from "aws-lambda";
-import * as jsonwebtoken from "jsonwebtoken";
-import * as querystring from "querystring";
-import * as mustache from "mustache";
-import { Handler } from "../../core/handler";
-import * as request from "request-promise-native";
-import * as path from "path";
-import * as fs from "fs";
-import { IProviderRepository } from "../../core/repositories/IProviderRepository";
-import { ProviderRepository } from "../repositories/ProviderRepository";
-import { ISessionRepository } from "../../core/repositories/ISessionRepository";
-import { SessionRepository } from "../repositories/SessionRepository";
-import { AuthorizationCode } from "../models/AuthorizationCode";
-import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
-import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
-import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
-import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
-import { IUserRepository } from "../../core/repositories/IUserRepository";
-import { UserRepository } from "../repositories/UserRepository";
-import { IUser } from "../../core/models/IUser";
-import { User, ExternalIdentity } from "../models/User";
-import * as url from "url-join";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
+import * as mustache from 'mustache';
+import * as querystring from 'querystring';
+
+import { Handler } from '../../core/handler';
+import { IUserRepository } from '../../core/repositories/IUserRepository';
+import { AuthorizationCode } from '../models/AuthorizationCode';
+import { AuthorizationCodeRepository } from '../repositories/AuthorizationCodeRepository';
+import { SessionRepository } from '../repositories/SessionRepository';
+import { UserRepository } from '../repositories/UserRepository';
 
 export class LoginHandler extends Handler {
     async get(

@@ -1,22 +1,22 @@
 import {
     APIGatewayProxyEvent,
-    Context,
+    APIGatewayProxyResult,
     Callback,
-    APIGatewayProxyResult
+    Context
 } from "aws-lambda";
-import * as qs from "querystring";
-import * as validator from "validator";
 import * as moment from "moment";
-import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
-import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
-import { UserToken } from "../models/Token";
-import { ITokenRepository } from "../../core/repositories/ITokenRepository";
-import { TokenRepository } from "../repositories/TokenRepository";
-import { IUserRepository } from "../../core/repositories/IUserRepository";
-import { UserRepository } from "../repositories/UserRepository";
-import { IClientRepository } from "../../core/repositories/IClientRepository";
-import { ClientRepository } from "../repositories/ClientRepository";
+import * as validator from "validator";
+
 import { Handler } from "../../core/handler";
+import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
+import { IClientRepository } from "../../core/repositories/IClientRepository";
+import { ITokenRepository } from "../../core/repositories/ITokenRepository";
+import { IUserRepository } from "../../core/repositories/IUserRepository";
+import { UserToken } from "../models/Token";
+import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
+import { ClientRepository } from "../repositories/ClientRepository";
+import { TokenRepository } from "../repositories/TokenRepository";
+import { UserRepository } from "../repositories/UserRepository";
 
 export class TokenHandler extends Handler {
     async get(

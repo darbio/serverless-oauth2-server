@@ -1,7 +1,6 @@
-import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { AuthorizationCode } from "../models/AuthorizationCode";
-import * as moment from "moment";
+import { IAuthorizationCodeRepository } from '../../core/repositories/IAuthorizationCodeRepository';
+import { AuthorizationCode } from '../models/AuthorizationCode';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface IAuthorizationCodeDataObject {
     id: string;

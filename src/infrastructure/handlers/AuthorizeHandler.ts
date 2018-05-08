@@ -1,16 +1,11 @@
-import {
-    APIGatewayProxyEvent,
-    Context,
-    Callback,
-    APIGatewayProxyResult
-} from "aws-lambda";
-import * as url from "url-join";
-import * as querystring from "querystring";
-import { SessionRepository } from "../repositories/SessionRepository";
-import { Session } from "../models/Session";
-import { IClientRepository } from "../../core/repositories/IClientRepository";
-import { ClientRepository } from "../repositories/ClientRepository";
-import { Handler } from "../../core/handler";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
+import * as url from 'url-join';
+
+import { Handler } from '../../core/handler';
+import { IClientRepository } from '../../core/repositories/IClientRepository';
+import { Session } from '../models/Session';
+import { ClientRepository } from '../repositories/ClientRepository';
+import { SessionRepository } from '../repositories/SessionRepository';
 
 export class AuthorizeHandler extends Handler {
     async get(

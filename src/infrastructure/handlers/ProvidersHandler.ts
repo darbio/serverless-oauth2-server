@@ -1,21 +1,12 @@
-import {
-    APIGatewayProxyEvent,
-    Context,
-    Callback,
-    APIGatewayProxyResult
-} from "aws-lambda";
-import * as uuid from "uuid/v4";
-import * as querystring from "querystring";
-import { Handler } from "../../core/handler";
-import { IProviderRepository } from "../../core/repositories/IProviderRepository";
-import { ProviderRepository } from "../repositories/ProviderRepository";
-import { SessionRepository } from "../repositories/SessionRepository";
-import { ISessionRepository } from "../../core/repositories/ISessionRepository";
-import { Session } from "../models/Session";
-import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
-import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
-import { ProviderSession } from "../models/ProviderSession";
-import * as url from "url-join";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
+import * as querystring from 'querystring';
+
+import { Handler } from '../../core/handler';
+import { IProviderRepository } from '../../core/repositories/IProviderRepository';
+import { IProviderSessionRepository } from '../../core/repositories/IProviderSessionRepository';
+import { ProviderSession } from '../models/ProviderSession';
+import { ProviderRepository } from '../repositories/ProviderRepository';
+import { ProviderSessionRepository } from '../repositories/ProviderSessionRepository';
 
 export class ProvidersHandler extends Handler {
     /**

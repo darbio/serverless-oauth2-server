@@ -1,6 +1,7 @@
-import { IProviderSession } from "../../core/models/IProviderSession";
-import * as uuid from "uuid/v4";
 import * as moment from "moment";
+import * as uuid from "uuid/v4";
+
+import { IProviderSession } from "../../core/models/IProviderSession";
 
 export class ProviderSession implements IProviderSession {
     private _id: string;

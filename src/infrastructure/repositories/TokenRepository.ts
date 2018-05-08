@@ -1,7 +1,6 @@
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { ITokenRepository } from "../../core/repositories/ITokenRepository";
-import { UserToken } from "../models/Token";
-import { IUserToken } from "../../core/models/IToken";
+import { IUserToken } from '../../core/models/IToken';
+import { ITokenRepository } from '../../core/repositories/ITokenRepository';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface ITokenDataObject {
     id: string;

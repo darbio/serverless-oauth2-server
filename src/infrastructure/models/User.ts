@@ -1,11 +1,6 @@
-import {
-    IUser,
-    IIdentity,
-    IInternalIdentity,
-    IExternalIdentity
-} from "../../core/models/IUser";
-import * as bcrypt from "bcryptjs";
-import * as uuid from "uuid/v4";
+import * as bcrypt from 'bcryptjs';
+
+import { IExternalIdentity, IIdentity, IInternalIdentity, IUser } from '../../core/models/IUser';
 
 export class User implements IUser {
     get id(): string {

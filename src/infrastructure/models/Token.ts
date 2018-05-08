@@ -1,7 +1,8 @@
-import * as uuid from "uuid/v4";
 import * as crypto from "crypto";
-import * as moment from "moment";
 import * as jsonwebtoken from "jsonwebtoken";
+import * as moment from "moment";
+import * as uuid from "uuid/v4";
+
 import { IUserToken } from "../../core/models/IToken";
 import { IUser } from "../../core/models/IUser";
 

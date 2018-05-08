@@ -1,6 +1,6 @@
-import { ISessionRepository } from "../../core/repositories/ISessionRepository";
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { Session } from "../models/Session";
+import { ISessionRepository } from '../../core/repositories/ISessionRepository';
+import { Session } from '../models/Session';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface ISessionDataObject {
     id: string;

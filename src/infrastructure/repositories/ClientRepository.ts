@@ -1,6 +1,6 @@
-import { IClientRepository } from "../../core/repositories/IClientRepository";
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { Client } from "../models/Client";
+import { IClientRepository } from '../../core/repositories/IClientRepository';
+import { Client } from '../models/Client';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface IClientDataObject {
     id: string;

@@ -1,6 +1,6 @@
-import * as uuid from "uuid/v4";
 import * as moment from "moment";
-import { AuthorizationCode } from "./AuthorizationCode";
+import * as uuid from "uuid/v4";
+
 import { ISession } from "../../core/models/ISession";
 
 export class Session implements ISession {

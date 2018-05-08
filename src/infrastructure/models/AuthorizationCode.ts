@@ -1,5 +1,6 @@
 import * as crypto from "crypto";
 import * as moment from "moment";
+
 import { IAuthorizationCode } from "../../core/models/IAuthorizationCode";
 
 export class AuthorizationCode implements IAuthorizationCode {

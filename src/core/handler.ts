@@ -1,4 +1,4 @@
-import { Callback, APIGatewayProxyResult } from "aws-lambda";
+import { APIGatewayProxyResult, Callback } from 'aws-lambda';
 
 export abstract class Handler {
     Ok(

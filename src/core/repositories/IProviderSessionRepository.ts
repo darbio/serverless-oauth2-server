@@ -1,5 +1,5 @@
-import { IGet, ISave } from "./IRepository";
-import { IProviderSession } from "../models/IProviderSession";
+import { IProviderSession } from '../models/IProviderSession';
+import { IGet, ISave } from './IRepository';
 
 export interface IProviderSessionRepository
     extends IGet<IProviderSession, string>,

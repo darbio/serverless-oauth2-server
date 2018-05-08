@@ -1,6 +1,6 @@
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { IProviderRepository } from "../../core/repositories/IProviderRepository";
-import { Provider } from "../models/Provider";
+import { IProviderRepository } from '../../core/repositories/IProviderRepository';
+import { Provider } from '../models/Provider';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface IProviderDataObject {
     id: string;

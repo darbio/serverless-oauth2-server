@@ -1,5 +1,6 @@
-import { IClient } from "../../core/models/IClient";
 import * as uuid from "uuid/v4";
+
+import { IClient } from "../../core/models/IClient";
 
 export class Client implements IClient {
     get id(): string {

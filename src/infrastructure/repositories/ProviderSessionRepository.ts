@@ -1,6 +1,6 @@
-import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { ProviderSession } from "../models/ProviderSession";
+import { IProviderSessionRepository } from '../../core/repositories/IProviderSessionRepository';
+import { ProviderSession } from '../models/ProviderSession';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface IProviderSessionDataObject {
     id: string;

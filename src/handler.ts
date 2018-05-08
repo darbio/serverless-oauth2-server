@@ -1,16 +1,10 @@
-import {
-    APIGatewayProxyEvent,
-    Context,
-    Callback,
-    APIGatewayProxyResult
-} from "aws-lambda";
-import * as qs from "querystring";
+import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
 
-import { TokenHandler } from "./infrastructure/handlers/TokenHandler";
-import { AuthorizeHandler } from "./infrastructure/handlers/AuthorizeHandler";
-import { CallbackHandler } from "./infrastructure/handlers/CallbackHandler";
-import { ProvidersHandler } from "./infrastructure/handlers/ProvidersHandler";
-import { LoginHandler } from "./infrastructure/handlers/LoginHandler";
+import { AuthorizeHandler } from './infrastructure/handlers/AuthorizeHandler';
+import { CallbackHandler } from './infrastructure/handlers/CallbackHandler';
+import { LoginHandler } from './infrastructure/handlers/LoginHandler';
+import { ProvidersHandler } from './infrastructure/handlers/ProvidersHandler';
+import { TokenHandler } from './infrastructure/handlers/TokenHandler';
 
 // authorization_code - token?grant_type=authorization_code&code=AUTH_CODE_HERE&redirect_uri=REDIRECT_URI&client_id=CLIENT_ID
 // *not implemented* password (resource owner password grant) - token?grant_type=password&username=USERNAME&password=PASSWORD&client_id=CLIENT_ID

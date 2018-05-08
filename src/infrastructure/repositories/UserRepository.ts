@@ -1,13 +1,7 @@
-import { DynamoDbRepository } from "./DynamoDbRepository";
-import { IUserRepository } from "../../core/repositories/IUserRepository";
-import { User, InternalIdentity, ExternalIdentity } from "../models/User";
-import * as aws from "aws-sdk";
-import {
-    IUser,
-    IInternalIdentity,
-    IExternalIdentity,
-    IIdentity
-} from "../../core/models/IUser";
+import { IExternalIdentity, IIdentity, IInternalIdentity, IUser } from '../../core/models/IUser';
+import { IUserRepository } from '../../core/repositories/IUserRepository';
+import { ExternalIdentity, InternalIdentity, User } from '../models/User';
+import { DynamoDbRepository } from './DynamoDbRepository';
 
 interface IUserDataObject {
     id: string;
