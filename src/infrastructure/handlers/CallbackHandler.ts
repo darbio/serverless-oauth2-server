@@ -56,7 +56,11 @@ export class CallbackHandler extends Handler {
                     code: authCode,
                     client_id: provider.clientId,
                     client_secret: provider.clientSecret,
-                    redirect_uri: url(process.env.BASE_URL, provider.id)
+                    redirect_uri: url(
+                        process.env.BASE_URL,
+                        "callback/",
+                        provider.id
+                    )
                 }
             };
             let tokenRequest = await request.post(
@@ -74,7 +78,9 @@ export class CallbackHandler extends Handler {
             } = JSON.parse(tokenRequest);
 
             // Verify the signature of the JWT
-            // TODO Get the profile so we can create a user in our system
+            // TODO
+
+            // Get the profile so we can create a user in our system
             let jwt = jsonwebtoken.decode(body.id_token);
             let username = jwt["email"];
             let sub = jwt["sub"];
