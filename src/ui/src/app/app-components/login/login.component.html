@@ -6,13 +6,13 @@
     <input type="email" id="username" name="username" class="form-control" placeholder="Email address" required autofocus>
     <label for="password" class="sr-only">Password</label>
     <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
-    <div class="checkbox mb-3">
+    <!-- <div class="checkbox mb-3">
       <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
-    </div>
+    </div> -->
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <a href="#">Don't remember your password?</a>
+    <a [routerLink]="['/', 'forgotten']">Don't remember your password?</a>
     <a href="{{baseUrl}}providers/google?session={{sessionId}}" class="mt-5 btn btn-outline-dark btn-block">
       <i class="fab fa-google float-left mt-1"></i> Sign in using Google
     </a>
