@@ -2,6 +2,14 @@
 
 An OAuth2 ID Provider using serverless, running on AWS lambda with a dynamodb backend.
 
+The project provides the following endpoints:
+
+*   `authorize` - OAuth2 authorize endpoint.
+*   `token` - OAuth2 token endpoint.
+*   `providers/{providerId}` - Custom endpoint to send user to an external OAuth2 IDP.
+*   `callback/{providerId}` - The callback for the external OAuth2 IDP to send the user to.
+*   `login` - The User interface for the user to login with.
+
 ## Running locally
 
 Use `npm start` to spin up a local instance of serverless running the identity provider.
