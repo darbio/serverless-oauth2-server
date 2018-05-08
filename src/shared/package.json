@@ -1,0 +1,10 @@
+{
+    "name": "idp-shared",
+    "version": "1.0.0",
+    "description": "Identity server shared components",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Darb.io (http://darb.io)",
+    "license": "ISC"
+}
