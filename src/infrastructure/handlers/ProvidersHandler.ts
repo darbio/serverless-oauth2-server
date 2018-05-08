@@ -55,7 +55,11 @@ export class ProvidersHandler extends Handler {
                 scope: provider.scope.join(" "),
                 access_type: "offline",
                 state: providerSession.id,
-                redirect_uri: url(process.env.BASE_URL, provider.id),
+                redirect_uri: url(
+                    process.env.BASE_URL,
+                    "callback/",
+                    provider.id
+                ),
                 response_type: "code",
                 client_id: provider.clientId
             };
