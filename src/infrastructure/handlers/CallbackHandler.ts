@@ -68,6 +68,10 @@ export class CallbackHandler extends Handler {
                 requestOptions
             );
 
+            if (tokenRequest.error) {
+                throw new Error(tokenRequest.error);
+            }
+
             // Parse the request
             let body: {
                 access_token: string;
