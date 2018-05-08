@@ -21,7 +21,7 @@ import { IUserRepository } from "../../core/repositories/IUserRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { IUser } from "../../core/models/IUser";
 import { User, ExternalIdentity } from "../models/User";
-import * as url from "url";
+import * as url from "url-join";
 
 export class CallbackHandler extends Handler {
     async get(
@@ -137,7 +137,7 @@ export class CallbackHandler extends Handler {
             // Send them back to the auth server with a authorization code
             return this.Redirect(
                 callback,
-                url.resolve(
+                url(
                     process.env.BASE_URL,
                     `${code.redirectUri}?code=${code.id}&state=${session.state}`
                 )

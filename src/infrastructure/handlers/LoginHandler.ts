@@ -24,7 +24,7 @@ import { IUserRepository } from "../../core/repositories/IUserRepository";
 import { UserRepository } from "../repositories/UserRepository";
 import { IUser } from "../../core/models/IUser";
 import { User, ExternalIdentity } from "../models/User";
-import * as url from "url";
+import * as url from "url-join";
 
 export class LoginHandler extends Handler {
     async get(
@@ -113,7 +113,7 @@ export class LoginHandler extends Handler {
         </head>
         
         <body class="text-center">
-            <form class="form-signin" action="/login?session={{sessionId}}" method="post">
+            <form class="form-signin" action="{{baseUrl}}login?session={{sessionId}}" method="post">
                 <img class="mb-4" src="https://avatars1.githubusercontent.com/u/517620?s=460&v=4" alt="" width="72" height="72">
                 <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
                 <!-- <a href="/providers/google?session{{sessionId}}" class="btn btn-lg btn-primary btn-block">
@@ -132,7 +132,7 @@ export class LoginHandler extends Handler {
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
                 <a href="#">Don't remember your password?</a>
-                <a href="/providers/google?session={{sessionId}}" class="mt-5 btn btn-outline-dark btn-block">
+                <a href="{{baseUrl}}providers/google?session={{sessionId}}" class="mt-5 btn btn-outline-dark btn-block">
                     <i class="fab fa-google float-left mt-1"></i> Sign in using Google
                 </a>
                 <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
@@ -151,7 +151,10 @@ export class LoginHandler extends Handler {
         </body>
         
         </html>`,
-            { sessionId: sessionId }
+            {
+                sessionId: sessionId,
+                baseUrl: process.env.BASE_URL
+            }
         );
 
         // Callback
@@ -162,6 +165,7 @@ export class LoginHandler extends Handler {
             },
             body: html
         });
+        return;
     }
 
     async post(
@@ -183,9 +187,9 @@ export class LoginHandler extends Handler {
 
             // Validate the session
             if (!session.isValid()) {
-                return callback(new Error("Session has expired"), {
-                    statusCode: 401,
-                    body: null
+                return this.Error(callback, {
+                    error: "session_expired",
+                    error_description: "Session has expired"
                 });
             }
 
@@ -193,11 +197,17 @@ export class LoginHandler extends Handler {
             const user = await userRepository.get(username);
 
             if (!user) {
-                throw new Error("Username invalid");
+                return this.Error(callback, {
+                    error: "credentials_invalid",
+                    error_description: "Invalid username"
+                });
             }
 
             if (!user.hasInternalIdentity()) {
-                throw new Error("Username is not registered locally");
+                return this.Error(callback, {
+                    error: "credentials_invalid",
+                    error_description: "Username is not registered locally"
+                });
             }
 
             let internalIdentity = user.getInternalIdentity();
@@ -221,7 +231,7 @@ export class LoginHandler extends Handler {
                     // Send them back to the auth server with a authorization code
                     return this.Redirect(
                         callback,
-                        url.resolve(
+                        url(
                             process.env.BASE_URL,
                             `${session.redirectUri}?code=${code.id}&state=${
                                 session.state
@@ -232,7 +242,8 @@ export class LoginHandler extends Handler {
             } else {
                 // Login failed
                 return this.Unauthorized(callback, {
-                    message: "Invalid credentials"
+                    error: "credentials_invalid",
+                    error_description: "Invalid username password"
                 });
             }
         } catch (err) {

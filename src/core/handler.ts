@@ -22,11 +22,13 @@ export abstract class Handler {
             headers = {};
         }
         headers["Location"] = location;
-        callback(null, {
+        const response = {
             statusCode: 302,
             headers: headers ? headers : null,
             body: null
-        });
+        };
+        console.log(JSON.stringify(response));
+        callback(null, response);
     }
 
     Error(

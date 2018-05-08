@@ -22,6 +22,7 @@
         "@types/mustache": "^0.8.30",
         "@types/request": "^2.47.0",
         "@types/request-promise-native": "^1.0.14",
+        "@types/url-join": "^0.8.2",
         "@types/validator": "^9.4.1",
         "serverless-offline": "^3.20.3",
         "serverless-webpack": "^5.1.1",
@@ -37,6 +38,7 @@
         "mustache": "^2.3.0",
         "request": "^2.85.0",
         "request-promise-native": "^1.0.5",
+        "url-join": "^4.0.0",
         "uuid": "^3.2.1",
         "validator": "^9.4.1"
     }

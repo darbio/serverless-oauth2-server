@@ -15,7 +15,7 @@ import { Session } from "../models/Session";
 import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
 import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
 import { ProviderSession } from "../models/ProviderSession";
-import * as url from "url";
+import * as url from "url-join";
 
 export class ProvidersHandler extends Handler {
     /**
@@ -66,7 +66,7 @@ export class ProvidersHandler extends Handler {
             // Redirect user to provider
             return this.Redirect(
                 callback,
-                url.resolve(
+                url(
                     process.env.BASE_URL,
                     `${provider.authorizationUrl}?${querystring.stringify(
                         params

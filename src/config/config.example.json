@@ -1,3 +1,13 @@
 {
-    "DB_ENCRYPTION_KEY": "SECRET"
+    "DB_ENCRYPTION_KEY": "SECRET",
+    "BASE_URL": {
+        "Fn::Join": [
+            "",
+            [
+                " https://",
+                { "Ref": "ApiGatewayRestApi" },
+                ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}/"
+            ]
+        ]
+    }
 }
