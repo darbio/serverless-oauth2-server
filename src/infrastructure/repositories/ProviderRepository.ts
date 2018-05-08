@@ -1,6 +1,6 @@
-import { IProviderRepository } from '../../core/repositories/IProviderRepository';
-import { Provider } from '../models/Provider';
-import { DynamoDbRepository } from './DynamoDbRepository';
+import { IProviderRepository } from "../../core/repositories/IProviderRepository";
+import { Provider } from "../models/Provider";
+import { DynamoDbRepository } from "./DynamoDbRepository";
 
 interface IProviderDataObject {
     id: string;
@@ -8,7 +8,6 @@ interface IProviderDataObject {
     clientSecret: string;
     authorizationUrl: string;
     tokenUrl: string;
-    callbackUrl: string;
     profileUrl: string;
     scope: string[];
 }
@@ -26,7 +25,6 @@ export class ProviderRepository extends DynamoDbRepository<Provider>
             clientSecret: domainObject.clientSecret,
             authorizationUrl: domainObject.authorizationUrl,
             tokenUrl: domainObject.tokenUrl,
-            callbackUrl: domainObject.callbackUrl,
             profileUrl: domainObject.profileUrl,
             scope: domainObject.scope
         };
@@ -40,7 +38,6 @@ export class ProviderRepository extends DynamoDbRepository<Provider>
         provider["_clientSecret"] = dataObject.clientSecret;
         provider["_authorizationUrl"] = dataObject.authorizationUrl;
         provider["_tokenUrl"] = dataObject.tokenUrl;
-        provider["_callbackUrl"] = dataObject.callbackUrl;
         provider["_profileUrl"] = dataObject.profileUrl;
         provider["_scope"] = dataObject.scope;
 

@@ -4,7 +4,6 @@ export interface IProvider {
     clientSecret: string;
     authorizationUrl: string;
     tokenUrl: string;
-    callbackUrl: string;
     profileUrl: string;
     scope: string[];
 }

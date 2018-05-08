@@ -65,7 +65,6 @@ Providers are what provides the user to the server. E.g. local users, google etc
     "profile",
     "email"
   ],
-  "clientSecret": "CLIENT_SECRET",
-  "callbackUrl": "http://idp.tld/callback/PROVIDER_ID"
+  "clientSecret": "CLIENT_SECRET"
 }
 ```

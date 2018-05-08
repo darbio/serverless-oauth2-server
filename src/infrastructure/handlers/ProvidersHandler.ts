@@ -1,12 +1,18 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
-import * as querystring from 'querystring';
+import {
+    APIGatewayProxyEvent,
+    APIGatewayProxyResult,
+    Callback,
+    Context
+} from "aws-lambda";
+import * as querystring from "querystring";
+import * as url from "url-join";
 
-import { Handler } from '../../core/handler';
-import { IProviderRepository } from '../../core/repositories/IProviderRepository';
-import { IProviderSessionRepository } from '../../core/repositories/IProviderSessionRepository';
-import { ProviderSession } from '../models/ProviderSession';
-import { ProviderRepository } from '../repositories/ProviderRepository';
-import { ProviderSessionRepository } from '../repositories/ProviderSessionRepository';
+import { Handler } from "../../core/handler";
+import { IProviderRepository } from "../../core/repositories/IProviderRepository";
+import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
+import { ProviderSession } from "../models/ProviderSession";
+import { ProviderRepository } from "../repositories/ProviderRepository";
+import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
 
 export class ProvidersHandler extends Handler {
     /**
@@ -49,7 +55,7 @@ export class ProvidersHandler extends Handler {
                 scope: provider.scope.join(" "),
                 access_type: "offline",
                 state: providerSession.id,
-                redirect_uri: provider.callbackUrl,
+                redirect_uri: url(process.env.BASE_URL, provider.id),
                 response_type: "code",
                 client_id: provider.clientId
             };

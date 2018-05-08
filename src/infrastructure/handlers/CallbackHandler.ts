@@ -1,20 +1,26 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
-import * as jsonwebtoken from 'jsonwebtoken';
-import * as request from 'request-promise-native';
+import {
+    APIGatewayProxyEvent,
+    APIGatewayProxyResult,
+    Callback,
+    Context
+} from "aws-lambda";
+import * as jsonwebtoken from "jsonwebtoken";
+import * as request from "request-promise-native";
+import * as url from "url-join";
 
-import { Handler } from '../../core/handler';
-import { IAuthorizationCodeRepository } from '../../core/repositories/IAuthorizationCodeRepository';
-import { IProviderRepository } from '../../core/repositories/IProviderRepository';
-import { IProviderSessionRepository } from '../../core/repositories/IProviderSessionRepository';
-import { ISessionRepository } from '../../core/repositories/ISessionRepository';
-import { IUserRepository } from '../../core/repositories/IUserRepository';
-import { AuthorizationCode } from '../models/AuthorizationCode';
-import { ExternalIdentity, User } from '../models/User';
-import { AuthorizationCodeRepository } from '../repositories/AuthorizationCodeRepository';
-import { ProviderRepository } from '../repositories/ProviderRepository';
-import { ProviderSessionRepository } from '../repositories/ProviderSessionRepository';
-import { SessionRepository } from '../repositories/SessionRepository';
-import { UserRepository } from '../repositories/UserRepository';
+import { Handler } from "../../core/handler";
+import { IAuthorizationCodeRepository } from "../../core/repositories/IAuthorizationCodeRepository";
+import { IProviderRepository } from "../../core/repositories/IProviderRepository";
+import { IProviderSessionRepository } from "../../core/repositories/IProviderSessionRepository";
+import { ISessionRepository } from "../../core/repositories/ISessionRepository";
+import { IUserRepository } from "../../core/repositories/IUserRepository";
+import { AuthorizationCode } from "../models/AuthorizationCode";
+import { ExternalIdentity, User } from "../models/User";
+import { AuthorizationCodeRepository } from "../repositories/AuthorizationCodeRepository";
+import { ProviderRepository } from "../repositories/ProviderRepository";
+import { ProviderSessionRepository } from "../repositories/ProviderSessionRepository";
+import { SessionRepository } from "../repositories/SessionRepository";
+import { UserRepository } from "../repositories/UserRepository";
 
 export class CallbackHandler extends Handler {
     async get(
@@ -50,7 +56,7 @@ export class CallbackHandler extends Handler {
                     code: authCode,
                     client_id: provider.clientId,
                     client_secret: provider.clientSecret,
-                    redirect_uri: provider.callbackUrl
+                    redirect_uri: url(process.env.BASE_URL, provider.id)
                 }
             };
             let tokenRequest = await request.post(

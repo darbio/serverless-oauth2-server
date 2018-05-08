@@ -26,11 +26,6 @@ export class Provider implements IProvider {
         return this._tokenUrl;
     }
 
-    private _callbackUrl: string;
-    public get callbackUrl(): string {
-        return this._callbackUrl;
-    }
-
     private _profileUrl: string;
     public get profileUrl(): string {
         return this._profileUrl;
