@@ -2,15 +2,21 @@
     "name": "idp",
     "version": "1.0.0",
     "description": "ID Server for Darb.io",
-    "main": "index.js",
     "directories": {
         "test": "tests"
     },
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "start": "npm-run-all --parallel ui api",
-        "ui": "cd src/ui && ng serve",
-        "api": "cd src/api && npm start"
+        "ui": "cd src/ui && npm start",
+        "api": "cd src/api && npm start",
+
+        "deploy": "npm-run-all deploy:api deploy:ui",
+        "deploy:ui": "cd src/ui && npm run deploy",
+        "deploy:api": "cd src/api && npm run deploy",
+
+        "deploy:dev": "npm-run-all deploy:api:dev deploy:ui:dev",
+        "deploy:ui:dev": "cd src/ui && npm run deploy:dev",
+        "deploy:api:dev": "cd src/api && npm run deploy:dev"
     },
     "repository": {
         "type": "git",

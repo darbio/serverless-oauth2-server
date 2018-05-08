@@ -1,5 +1,16 @@
 # IDP - Identity Server
 
+This project is split into two sub-projects:
+
+1.  API - OAuth2 implementation on serverless.
+2.  UI - User interface using angular 6.
+
+## UI
+
+Under construction.
+
+## API
+
 An OAuth2 ID Provider using serverless, running on AWS lambda with a dynamodb backend.
 
 The project provides the following endpoints:
@@ -16,14 +27,12 @@ Use `npm start` to spin up a local instance of serverless running the identity p
 
 ## Deploying to AWS
 
-Vanity scripts:
+To deploy the project to AWS, use the following scripts.
 
 *   `npm run deploy:dev`
 *   `npm run deploy:prod`
 
-Under the covers:
-
-Use `sls deploy --stage dev --aws-profile darb.io` to deploy to aws.
+The API and the UI specify their deployment methods in their own `package.json` files in the respective subdirectories.
 
 ## Model
 

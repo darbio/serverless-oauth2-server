@@ -1,13 +1,16 @@
 {
-  "name": "ui",
-  "version": "0.0.0",
+  "name": "idp-ui",
+  "version": "1.0.0",
+  "description": "Identity server UI",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "echo \"Error: no deploy specified\" && exit 1",
+    "deploy:dev": "echo \"Error: no deploy specified\" && exit 1"
   },
   "private": true,
   "dependencies": {

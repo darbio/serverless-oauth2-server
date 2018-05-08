@@ -1,20 +1,15 @@
 {
-    "name": "idp",
+    "name": "idp-api",
     "version": "1.0.0",
-    "description": "identity provider server darb.io",
+    "description": "Identity server API",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "sls offline --stage local",
         "deploy:dev": "sls deploy --stage dev --aws-profile darb.io"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+ssh://git@bitbucket.org/darbio/idp.git"
-    },
-    "author": "darbio (darb.io)",
+    "author": "Darb.io (http://darb.io)",
     "license": "ISC",
-    "homepage": "https://bitbucket.org/darbio/idp#readme",
     "devDependencies": {
         "@types/aws-lambda": "^8.10.3",
         "@types/bcryptjs": "^2.4.1",
