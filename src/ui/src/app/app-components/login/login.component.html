@@ -2,6 +2,9 @@
   <form class="form-signin" action="{{baseUrl}}login?session={{sessionId}}" method="post">
     <img class="mb-4" src="https://avatars1.githubusercontent.com/u/517620?s=460&v=4" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+    <div *ngFor="let alert of alerts">
+      <alert [type]="alert.type" [dismissOnTimeout]="alert.timeout">{{ alert.msg }}</alert>
+    </div>
     <label for="username" class="sr-only">Email address</label>
     <input type="email" id="username" name="username" class="form-control" placeholder="Email address" required autofocus>
     <label for="password" class="sr-only">Password</label>

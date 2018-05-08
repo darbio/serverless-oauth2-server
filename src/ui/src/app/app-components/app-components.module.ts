@@ -3,13 +3,14 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { AlertModule } from "ngx-bootstrap/alert";
 
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
+import { IndexComponent } from "./index/index.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
-import { IndexComponent } from "./index/index.component";
 
 library.add(faGoogle, faCoffee);
 
@@ -20,7 +21,12 @@ library.add(faGoogle, faCoffee);
     ForgotPasswordComponent,
     IndexComponent
   ],
-  imports: [CommonModule, RouterModule, FontAwesomeModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FontAwesomeModule,
+    AlertModule.forRoot()
+  ],
   exports: [
     LoginComponent,
     RegisterComponent,
