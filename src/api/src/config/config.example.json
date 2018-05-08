@@ -9,5 +9,6 @@
                 ".execute-api.${self:provider.region}.amazonaws.com/${self:provider.stage}/"
             ]
         ]
-    }
+    },
+    "UI_URL": ""
 }
