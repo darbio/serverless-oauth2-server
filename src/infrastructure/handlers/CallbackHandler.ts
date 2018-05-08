@@ -137,10 +137,7 @@ export class CallbackHandler extends Handler {
             // Send them back to the auth server with a authorization code
             return this.Redirect(
                 callback,
-                url(
-                    process.env.BASE_URL,
-                    `${code.redirectUri}?code=${code.id}&state=${session.state}`
-                )
+                `${code.redirectUri}?code=${code.id}&state=${session.state}`
             );
         } catch (err) {
             return this.Error(callback, {

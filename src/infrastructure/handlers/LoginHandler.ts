@@ -231,12 +231,9 @@ export class LoginHandler extends Handler {
                     // Send them back to the auth server with a authorization code
                     return this.Redirect(
                         callback,
-                        url(
-                            process.env.BASE_URL,
-                            `${session.redirectUri}?code=${code.id}&state=${
-                                session.state
-                            }`
-                        )
+                        `${session.redirectUri}?code=${code.id}&state=${
+                            session.state
+                        }`
                     );
                 }
             } else {
