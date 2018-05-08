@@ -39,7 +39,7 @@ export class ProviderSession implements IProviderSession {
         providerSession._sessionId = params.sessionId;
         providerSession._created = new Date();
         providerSession._expires = moment(providerSession._created)
-            .add(1, "h")
+            .add(5, "m")
             .toDate();
 
         return providerSession;

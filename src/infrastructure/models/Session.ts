@@ -62,7 +62,7 @@ export class Session implements ISession {
         session._state = params.state;
         session._created = new Date();
         session._expires = moment(session._created)
-            .add(1, "h")
+            .add(5, "m")
             .toDate();
         return session;
     }

@@ -46,7 +46,7 @@ export class AuthorizationCode implements IAuthorizationCode {
         code._subject = params.subject;
         code._created = new Date();
         code._expires = moment(code._created)
-            .add(1, "h")
+            .add(5, "m")
             .toDate();
 
         return code;

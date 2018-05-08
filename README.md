@@ -19,6 +19,12 @@ Use `sls deploy --stage dev --aws-profile darb.io` to deploy to aws.
 
 ## Model
 
+This project uses dynamodb to store the users, clients and providers in the tables `idp_users_$stage`, `idp_clients_$stage` and `idp_providers_$stage`. Dynamodb is also used as a temporary store for sessions, tokens and codes. When an entity has an `expires` attribute, a TTL is set on that attribute and it is deleted after that is reached.
+
+*   Sessions expire after 5 minutes.
+*   Codes expire after 5 minutes.
+*   Tokens expire after 1 hour.
+
 ### Clients
 
 ```
