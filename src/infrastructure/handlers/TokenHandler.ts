@@ -132,11 +132,13 @@ export class TokenHandler extends Handler {
         let access_token = UserToken.create({
             type: "access",
             clientId: authorizationCode.clientId,
+            issuer: process.env.BASE_URL,
             user: user
         });
 
         let id_token = UserToken.create({
             type: "id",
+            issuer: process.env.BASE_URL,
             user: user,
             clientId: authorizationCode.clientId
         });

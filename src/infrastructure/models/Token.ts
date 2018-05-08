@@ -36,6 +36,11 @@ export class UserToken implements IUserToken {
     }
     private _expires: Date;
 
+    private _issuer: string;
+    public get issuer(): string {
+        return this._issuer;
+    }
+
     /**
      * Creates a user token
      * @param params
@@ -44,6 +49,7 @@ export class UserToken implements IUserToken {
         type: "access" | "id";
         clientId: string;
         user: IUser;
+        issuer: string;
     }): UserToken {
         let token = new UserToken();
 
@@ -51,6 +57,7 @@ export class UserToken implements IUserToken {
         token._user = params.user;
         token._type = params.type;
         token._clientId = params.clientId;
+        token._issuer = params.issuer;
         token._created = new Date();
         token._expires = moment(token._created)
             .add(1, "h")
@@ -76,7 +83,7 @@ export class UserToken implements IUserToken {
             aud: this.clientId,
             iat: moment(new Date()).unix(),
             exp: moment(moment().add(1, "h")).unix(),
-            iss: "https://idp.darb.io",
+            iss: this.issuer,
             jti: this.id
         };
         if (this.type === "id") {

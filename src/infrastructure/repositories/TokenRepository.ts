@@ -8,6 +8,7 @@ interface ITokenDataObject {
     type: "access" | "id";
     subject: string;
     clientId: string;
+    issuer: string;
     created: number;
     expires: number;
 }
@@ -28,6 +29,7 @@ export class TokenRepository extends DynamoDbRepository<IUserToken>
             subject: businessObject.user.id,
             type: businessObject.type,
             clientId: businessObject.clientId,
+            issuer: businessObject.issuer,
             created: businessObject.created.getTime() / 1000,
             expires: businessObject.expires.getTime() / 1000
         };
