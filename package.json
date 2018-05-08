@@ -1,46 +1,25 @@
 {
     "name": "idp",
     "version": "1.0.0",
-    "description": "identity provider server darb.io",
+    "description": "ID Server for Darb.io",
     "main": "index.js",
+    "directories": {
+        "test": "tests"
+    },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "sls offline --stage local",
-        "deploy:dev": "sls deploy --stage dev --aws-profile darb.io"
+        "start": "npm-run-all --parallel ui api",
+        "ui": "cd src/ui && ng serve",
+        "api": "cd src/api && npm start"
     },
     "repository": {
         "type": "git",
         "url": "git+ssh://git@bitbucket.org/darbio/idp.git"
     },
-    "author": "darbio (darb.io)",
+    "author": "Darb.io (http://darb.io)",
     "license": "ISC",
     "homepage": "https://bitbucket.org/darbio/idp#readme",
     "devDependencies": {
-        "@types/aws-lambda": "^8.10.3",
-        "@types/bcryptjs": "^2.4.1",
-        "@types/jsonwebtoken": "^7.2.6",
-        "@types/moment": "^2.13.0",
-        "@types/mustache": "^0.8.30",
-        "@types/request": "^2.47.0",
-        "@types/request-promise-native": "^1.0.14",
-        "@types/url-join": "^0.8.2",
-        "@types/validator": "^9.4.1",
-        "serverless-offline": "^3.20.3",
-        "serverless-webpack": "^5.1.1",
-        "ts-loader": "^4.2.0",
-        "typescript": "^2.8.3",
-        "webpack": "^4.6.0"
-    },
-    "dependencies": {
-        "aws-sdk": "^2.229.1",
-        "bcryptjs": "^2.4.3",
-        "jsonwebtoken": "^8.2.1",
-        "moment": "^2.22.1",
-        "mustache": "^2.3.0",
-        "request": "^2.85.0",
-        "request-promise-native": "^1.0.5",
-        "url-join": "^4.0.0",
-        "uuid": "^3.2.1",
-        "validator": "^9.4.1"
+        "npm-run-all": "^4.1.3"
     }
 }

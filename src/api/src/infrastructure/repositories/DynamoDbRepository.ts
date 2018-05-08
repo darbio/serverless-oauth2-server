@@ -1,5 +1,5 @@
-import * as aws from 'aws-sdk';
-import * as crypto from 'crypto';
+import * as aws from "aws-sdk";
+import * as crypto from "crypto";
 
 export abstract class DynamoDbRepository<T> {
     protected client: aws.DynamoDB.DocumentClient;

@@ -1,0 +1,18 @@
+# package directories
+node_modules
+jspm_packages
+
+# Serverless directories
+.serverless
+
+# Webpack
+.webpack
+
+# other
+.DS_Store
+data
+data/**
+
+# Secrets
+src/config/config.*.json
+!src/config/config.example.json
