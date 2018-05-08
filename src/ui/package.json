@@ -33,6 +33,7 @@
     "ngx-bootstrap": "^2.0.5",
     "rxjs": "^6.1.0",
     "rxjs-compat": "^6.1.0",
+    "url-join": "^4.0.0",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

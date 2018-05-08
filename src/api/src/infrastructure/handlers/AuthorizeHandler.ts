@@ -1,11 +1,16 @@
-import { APIGatewayProxyEvent, APIGatewayProxyResult, Callback, Context } from 'aws-lambda';
-import * as url from 'url-join';
+import {
+    APIGatewayProxyEvent,
+    APIGatewayProxyResult,
+    Callback,
+    Context
+} from "aws-lambda";
+import * as url from "url-join";
 
-import { Handler } from '../../core/handler';
-import { IClientRepository } from '../../core/repositories/IClientRepository';
-import { Session } from '../models/Session';
-import { ClientRepository } from '../repositories/ClientRepository';
-import { SessionRepository } from '../repositories/SessionRepository';
+import { Handler } from "../../core/handler";
+import { IClientRepository } from "../../core/repositories/IClientRepository";
+import { Session } from "../models/Session";
+import { ClientRepository } from "../repositories/ClientRepository";
+import { SessionRepository } from "../repositories/SessionRepository";
 
 export class AuthorizeHandler extends Handler {
     async get(
@@ -63,10 +68,7 @@ export class AuthorizeHandler extends Handler {
             const sessionRepository = new SessionRepository();
             await sessionRepository.save(session);
 
-            return this.Redirect(
-                callback,
-                url(process.env.BASE_URL, session.getLoginUrl())
-            );
+            return this.Redirect(callback, session.getLoginUrl());
         } catch (err) {
             return this.Error(callback, {
                 error: "server_error",

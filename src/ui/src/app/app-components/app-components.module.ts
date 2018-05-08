@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { faGoogle, faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { faCoffee } from "@fortawesome/free-solid-svg-icons";
 import { AlertModule } from "ngx-bootstrap/alert";
 
@@ -12,7 +12,7 @@ import { IndexComponent } from "./index/index.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
 
-library.add(faGoogle, faCoffee);
+library.add(faGoogle, faCoffee, faFacebookF);
 
 @NgModule({
   declarations: [
