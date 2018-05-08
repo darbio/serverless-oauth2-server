@@ -9,12 +9,23 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { ForgotPasswordComponent } from "./forgot-password/forgot-password.component";
 import { LoginComponent } from "./login/login.component";
 import { RegisterComponent } from "./register/register.component";
+import { IndexComponent } from "./index/index.component";
 
 library.add(faGoogle, faCoffee);
 
 @NgModule({
-  declarations: [LoginComponent, RegisterComponent, ForgotPasswordComponent],
+  declarations: [
+    LoginComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
+    IndexComponent
+  ],
   imports: [CommonModule, RouterModule, FontAwesomeModule],
-  exports: [LoginComponent, RegisterComponent, ForgotPasswordComponent]
+  exports: [
+    LoginComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
+    IndexComponent
+  ]
 })
 export class AppComponentsModule {}
