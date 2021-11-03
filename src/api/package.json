@@ -36,6 +36,6 @@
         "request-promise-native": "^1.0.5",
         "url-join": "^4.0.0",
         "uuid": "^3.2.1",
-        "validator": "^9.4.1"
+        "validator": "^13.7.0"
     }
 }
