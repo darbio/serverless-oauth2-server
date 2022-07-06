@@ -30,7 +30,7 @@
         "aws-sdk": "^2.229.1",
         "bcryptjs": "^2.4.3",
         "jsonwebtoken": "^8.2.1",
-        "moment": "^2.22.1",
+        "moment": "^2.29.4",
         "mustache": "^2.3.0",
         "request": "^2.85.0",
         "request-promise-native": "^1.0.5",
